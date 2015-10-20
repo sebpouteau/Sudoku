@@ -36,8 +36,6 @@
   (let (( squares (make-instance 'squares)))
    (grid-to-square squares)
     squares))
-
-
 (defmethod make-squares-array (size)
   (make-array (list size size)))
 
@@ -75,14 +73,13 @@
 
 (defmethod copy-square(square)
   (let (( s (make-square
-	     (coor square) (digit square))));; s nouveau square
-    (setf (possible-digits s) (possible-digits square)) ;; copie posibilité
-    (setf (protected s) (protected square)) ;; copie de la protection
+	     (coor square) (digit square))))
+    (setf (possible-digits s) (possible-digits square))
+    (setf (protected s) (protected square))
     s))
 
 (defmethod copy-squares(squares)
   (let ((s (make-squares)))
-    ;; copie de tout les square de squares et stockage dans s
     (loop for y from 0 to (1- *size*)
 	  do
 	     (loop for x from 0 to (1- *size*)
@@ -91,65 +88,44 @@
 			    (copy-square (aref (squares-array squares) x y))
 			    )
 		   ))
-    (setf (to-fill s) (to-fill squares)) ;; copie to-fill
+    (setf (to-fill s) (to-fill squares))
     s))
 
 
 (defmethod init-game (game)
   (setf (game-squares game) (copy-squares (initial-grid game))))
 
-(defun line-colone(x y sens)
-  (if (zerop sens)
-      (list x y)
-      (list y x)))
-
-(defun list-digit-line (squares indiceY &key (sens 0))
-   (let ((list '())
-	 (array (squares-array squares)))
-    
-    (loop for indiceX from 0 to (1- *size*)
-	  do    
-	     (let* ((coor (line-colone indiceX indiceY sens))
-		    (value (digit(aref array (car coor) (cadr coor))))
-		    )
-	       (if (eq 1 sens)
-		   (setf coor (reverse coor)))
-	       (if (not (zerop value))
-		   (setf list (cons value list)))))
-     list
-     ))
 
 
 
-     
-;; (defun update-possibility-line (square x)
-;;   (let ((list '())
-;; 	(array (squares-array squares)))
-;;     (loop for x from 0 to (1- *size*)
-;; 	  do
-;; 	     (let ((digit (digit(aref array x y))))
-;; 	       (if (not (zerop digit))
-;; 		   (setf list (cons digit list)))))
-;;     (loop for x from 0 to (1- *size*)
-;; 	  do
-;; 	     (setf (possible-digits (aref array x y))
-;; 		   (set-exclusive-or (possible-digits (aref array x y)) list)))))
+(defun update-possibility-line (square x)
+  (let ((list '())
+	(array (squares-array squares)))
+    (loop for x from 0 to (1- *size*)
+	  do
+	     (let ((digit (digit(aref array x y))))
+	       (if (not (zerop digit))
+		   (setf list (cons digit list)))))
+    (loop for x from 0 to (1- *size*)
+	  do
+	     (setf (possible-digits (aref array x y))
+		   (set-exclusive-or (possible-digits (aref array x y)) list)))))
 
 
-;; (defun update-possibility (squares)
-;;   (loop for y from 0 to (1- *size*)
-;; 	do
-;; 	   (let ((list '())
-;; 		 (array (squares-array squares)))
-;; 	     (loop for x from 0 to (1- *size*)
-;; 		   do
-;; 		      (let ((digit (digit(aref array x y))))
-;; 			(if (not (zerop digit))
-;; 			    (setf list (cons digit list)))))
+(defun update-possibility (squares)
+  (loop for y from 0 to (1- *size*)
+	do
+	   (let ((list '())
+		 (array (squares-array squares)))
+	     (loop for x from 0 to (1- *size*)
+		   do
+		      (let ((digit (digit(aref array x y))))
+			(if (not (zerop digit))
+			    (setf list (cons digit list)))))
 	     
-;; 	      (loop for x from 0 to (1- *size*)
-;; 		    do
-;; 		       (setf (possible-digits (aref array x y))
-;; 			     (set-exclusive-or (possible-digits (aref array x y)) list))))))
+	      (loop for x from 0 to (1- *size*)
+		    do
+		       (setf (possible-digits (aref array x y))
+			     (set-exclusive-or (possible-digits (aref array x y)) list))))))
 		       
 			       
