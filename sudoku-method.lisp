@@ -98,30 +98,84 @@
 (defmethod init-game (game)
   (setf (game-squares game) (copy-squares (initial-grid game))))
 
+
+
 (defun line-colone(x y sens)
-  (if (zerop sens)
+;;retourn une liste de coordonné selon le sens choisit
+  (assert (or (eq sens 'line) (eq sens 'colonne)))
+  (if (eq sens 'line)
       (list x y)
       (list y x)))
 
-(defun list-digit-line (squares indiceY &key (sens 0))
+
+;;si sens est à 0 parcours des ligne sinon si sens est a 1 alors pacour colonne
+(defun list-digit-line (squares indiceStatic &key (sens 'line) (comportement 'update-possibility))
+  (assert (or (eq comportement 'update-possibility) (eq comportement 'list-digits)))
+  (assert (or (eq sens 'line) (eq sens 'colonne)))
    (let ((list '())
 	 (array (squares-array squares)))
-    
-    (loop for indiceX from 0 to (1- *size*)
+    (loop for indiceMovible from 0 to (1- *size*)
 	  do    
-	     (let* ((coor (line-colone indiceX indiceY sens))
+             ;; pour parcourire les colonnes c'est le x qui est static 
+	     ;; pour parcourire les line c'est le y qui est static 
+	     (let* ((coor (line-colone indiceMovible indiceStatic sens))
 		    (value (digit(aref array (car coor) (cadr coor))))
 		    )
-	       (if (eq 1 sens)
-		   (setf coor (reverse coor)))
 	       (if (not (zerop value))
 		   (setf list (cons value list)))))
-     list
-     ))
-
-
-
+    
+    (if (eq comportement 'list-digits)
+        ;; retourne la list des digit present dans la line ou la colonne
+	list
+        ;; sinon on met à jour les possible-digit de toutes les case de la ligne ou colonne
+	(loop for indiceMovible from 0 to (1- *size*)
+	  do    
+	     (let ((coor (line-colone indiceMovible indiceStatic sens)))
+	       (update-possible squares (car coor) (cadr coor) list))))))
      
+
+
+(defun list-digit-square-interior (squares x y &key (comportement 'update-possibility))
+  (assert (or (eq comportement 'update-possibility) (eq comportement 'list-digits)))
+  (let ((list '())
+	(array (squares-array squares))
+	;; definition des debut et fin du petit carré qui contient square[x,y]
+	(departX (* (truncate (/ x *sqrt-size*)) *sqrt-size*))
+	(finX (- (* (1+ (truncate (/ x *sqrt-size*))) *sqrt-size*) 1)) 
+	(departY (* (truncate (/ y *sqrt-size*)) *sqrt-size*))
+	(finY (- (* (1+ (truncate (/ y *sqrt-size*))) *sqrt-size*) 1)) )
+    
+    (loop for x from departX to finX
+       do
+	 (loop for y from departY to finY
+	    do
+	      (let ((value (digit(aref array x y))))
+		(if (not (zerop value))
+		    (setf list (cons value list))))))
+    (if (eq comportement 'list-digits)
+	;;si oui alors on retourne la liste des digit du petit carré
+	list
+        ;; sinon on met à jour les possible-digit de toutes les case du petit carré
+        (loop for x from departX to finX
+	   do
+	     (loop for y from departY to finY
+		do
+		  (update-possible squares x y list))))))
+	
+
+(defun update-possible (squares x y list)
+  ;;modifie le possible-digit du carré[x,y] en focntion de la liste
+  (setf (possible-digits (aref (squares-array squares) x y))
+		       (remove-possibility list (possible-digits (aref (squares-array squares) x y))))
+       )
+
+(defun remove-possibility (list1 list2)
+;; renvoie list2 priver des éléménts de list1 
+  (if (endp list1)
+      list2
+      (remove-possibility (cdr list1) (remove (car list1) list2))))
+
+
 ;; (defun update-possibility-line (square x)
 ;;   (let ((list '())
 ;; 	(array (squares-array squares)))
