@@ -10,7 +10,7 @@
 ;; =    Données    =
 ;; =================
 
-(defvar *sqrt-size* 3 "side of the side of a zone")
+(defvar *sqrt-size* 5 "side of the side of a zone")
 (defvar *size* (* *sqrt-size* *sqrt-size*))
 (defvar *nb-squares* (* *size* *size*))
 (defvar *game* nil "the current instance of a game")
@@ -41,8 +41,8 @@
   ((coor :initarg :coor :accessor coor) 
    (possible-digits :initform (copy-list *digits*)
 		    :initarg :possible-digits :accessor possible-digits)
-   (digit :accessor digit :initarg :digit :initform 0)
-   (protected :accessor protected :initarg :protected :initform nil))
+   (digit :initarg :digit :accessor digit :initform 0)
+   (protected :initform nil :initarg :protected :accessor protected))
   (:documentation "one square of the squares
          coor -> coordonnée du carré dans la grille
          possible-digits -> valeur (nombre) rentrée par l'utilisateur
