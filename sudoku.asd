@@ -15,4 +15,5 @@
    (:file "package")
    (:file "sudoku-generic")
    (:file "sudoku-method")
+   (:file "sudoku-affichage")
    ))

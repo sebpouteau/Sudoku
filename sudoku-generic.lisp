@@ -70,6 +70,10 @@
 (defgeneric assigned-p (square)
   (:documentation "T if the digit slot a striclty positive and inferior to 10"))
 
+(defgeneric copy-square(square)
+  (:documentation "copie un square et retourne la copie"))
+
+
 ;; ==================
 ;; ==     Grid     ==
 ;; ==================
@@ -95,8 +99,42 @@
 
 (defgeneric grid-to-square (squares)
   (:documentation "attribue the right coordinates to square-array"))
-(defgeneric copy-square(square))
-(defgeneric copy-squares(squares))
+
+(defgeneric change-digit (squares x y value)
+(:documentation "change digit du carré [x,y]
+                  et met a jour les possibilité de la ligne, colonne et du sous-carré")) 
+
+(defgeneric copy-squares(squares)
+  (:documentation "copi un squares et retourne la copie"))
+
+
+(defgeneric update-possibility (squares x y list)
+  (:documentation "met à jour les possible digit du carré [x,y] par rapport à list
+                   Il supprime tout les éléments de list présent dans la list des possibilité"))
+
+(defgeneric remove-sublist (list1 list2)
+  (:documentation "supprime les éléments tout les élément de list2 présent dans list1 et renvoie list2"))
+ 
+(defgeneric update-possibility-line (squares indiceStatic &optional sens comportement )
+  (:documentation "cette fonction a plusieur fonctionnalité configurer grace au deux paramètre optionnel:
+                     sens -> 'line ou 'column  ermet de parcourir soit les ligne ou les colonnes
+                     comportement -> 'list : renvoie les digit de la ligne ou colonne
+                                  -> 'update-possibility: met à jour les possible digit de tout les carrés d'une ligne ou colonne
+                                  -> 'update-and-list: met a jour les possible digit et renvoie la list des digit de la ligne ou colonne "
+
+))
+
+(defgeneric update-possibility-subsquares (squares x y &optional comportement)
+  (:documentation "cette fonction permet de gérer les sous-carré configurable avec comportement
+                     comportement -> 'list : renvoie les digit du sous carré
+                                  -> 'update-possibility: met à jour les possible digit de tout les carrés du sous-carré
+                                  -> 'update-and-list: met a jour les possible digit et renvoie la list des digit du sous-carré "
+))
+
+(defgeneric update-possibility-all-square (squares)
+(:documentation "met a jour les possible-digits de tout les carrés d'une grille")
+)
+
 
 ;; ==================
 ;; ==     Game     ==

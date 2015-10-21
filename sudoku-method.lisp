@@ -23,13 +23,18 @@
   (make-instance 'square :coor coor :digit digit))
 
 (defmethod assigned-p (square)
-  (if (and (< 0 (digit square)) (< (digit square) 10))
-      T
-      NIL))
+  (and (< 0 (digit square)) (<= (digit square) *size*)))
 
-;; ==================
-;; ==     Grid     ==
-;; ==================
+(defmethod copy-square(square)
+  (let (( s (make-square
+	     (coor square) (digit square))));; s nouveau square
+    (setf (possible-digits s) (possible-digits square)) ;; copie posibilité
+    (setf (protected s) (protected square)) ;; copie de la protection
+    s))
+
+;; =====================
+;; ==     Squares     ==
+;; =====================
 
 (defmethod make-squares()
   (let (( squares (make-instance 'squares)))
@@ -48,24 +53,11 @@
 		    (setf (aref (squares-array squares) x y)
 			  (make-square (make-coor x y)  0))))
   )
-
-(defun printCoor (squares x y)
-  (print (list
-	  (x-coor (coor (aref (squares-array squares) x y )))
-	  (y-coor (coor (aref (squares-array squares) x y))))))
-
-    
-
-;; ==================
-;; ==     Game     ==
-;; ==================
-
-(defmethod copy-square(square)
-  (let (( s (make-square
-	     (coor square) (digit square))));; s nouveau square
-    (setf (possible-digits s) (possible-digits square)) ;; copie posibilité
-    (setf (protected s) (protected square)) ;; copie de la protection
-    s))
+(defmethod change-digit ( squares x y value)
+  (setf (digit (aref (squares-array squares) x y)) value)
+  (update-possibility-line squares y 'line 'update-possibility)
+  (update-possibility-line squares x 'column 'update-possibility)
+  (update-possibility-subsquares squares x y 'update-possibility))
 
 (defmethod copy-squares(squares)
   (let ((s (make-squares)))
@@ -82,52 +74,47 @@
     s))
 
 
-(defmethod init-game (game)
-  (setf (game-squares game) (copy-squares (initial-grid game))))
+(defmethod update-possibility (squares x y list)
+  (setf (possible-digits (aref (squares-array squares) x y))
+		       (remove-sublist list (possible-digits (aref (squares-array squares) x y))))
+       )
+
+(defmethod remove-sublist(list1 list2)
+  (if (endp list1)
+      list2
+      (remove-sublist-list (cdr list1) (remove (car list1) list2))))
+
+(defmethod update-possibility-line (squares indiceStatic &optional (sens 'line) (comportement 'update-possibility))
+  (assert (or (eq comportement 'update-possibility) (eq comportement 'list-digits) (eq comportement 'update-and-list)))
+  (assert (or (eq sens 'line) (eq sens 'column)))
+  (labels ((line-column (x y)
+	     (if (eq sens 'line)
+		 (list x y)
+		 (list y x))))
+    (let ((list '())
+	  (array (squares-array squares)))
+      (loop for indiceMovible from 0 to (1- *size*) do    
+	 ;; pour parcourire les colonnes c'est le x qui est static 
+	 ;; pour parcourire les line c'est le y qui est static 
+	   (let* ((coor (line-column indiceMovible indiceStatic))
+		  (value (digit(aref array (car coor) (cadr coor))))
+		  )
+	     (if (not (zerop value))
+		 (setf list (cons value list)))))
+      
+      (unless (eq comportement 'list-digits)
+	  (loop for indiceMovible from 0 to (1- *size*) do    
+	       (let ((coor (line-column indiceMovible indiceStatic)))
+		 (update-possibility squares (car coor) (cadr coor) list))))
+      (unless (eq comportement 'update-possibility)
+	list))))
 
 
 
-(defun line-colone(x y sens)
-;;retourn une liste de coordonné selon le sens choisit
-  (assert (or (eq sens 'line) (eq sens 'colonne)))
-  (if (eq sens 'line)
-      (list x y)
-      (list y x)))
-
-
-;;si sens est à 0 parcours des ligne sinon si sens est a 1 alors pacour colonne
-(defun list-digit-line (squares indiceStatic &key (sens 'line) (comportement 'update-possibility))
-  (assert (or (eq comportement 'update-possibility) (eq comportement 'list-digits)))
-  (assert (or (eq sens 'line) (eq sens 'colonne)))
-   (let ((list '())
-	 (array (squares-array squares)))
-    (loop for indiceMovible from 0 to (1- *size*)
-	  do    
-             ;; pour parcourire les colonnes c'est le x qui est static 
-	     ;; pour parcourire les line c'est le y qui est static 
-	     (let* ((coor (line-colone indiceMovible indiceStatic sens))
-		    (value (digit(aref array (car coor) (cadr coor))))
-		    )
-	       (if (not (zerop value))
-		   (setf list (cons value list)))))
-    
-    (if (eq comportement 'list-digits)
-        ;; retourne la list des digit present dans la line ou la colonne
-	list
-        ;; sinon on met à jour les possible-digit de toutes les case de la ligne ou colonne
-	(loop for indiceMovible from 0 to (1- *size*)
-	  do    
-	     (let ((coor (line-colone indiceMovible indiceStatic sens)))
-	       (update-possible squares (car coor) (cadr coor) list))))
-     (when (eq comportement 'update-and-list)
-      list)))
-     
-
-;; comportement = list-digit retourne list digit 
-;; comportement = update-possibility alors change possible-digit square
-;; comportement = update-and-list change possible digit et renvoie la list des digit
-(defun list-digit-square-interior (squares x y &key (comportement 'update-possibility))
-  (assert (or (eq comportement 'update-possibility) (eq comportement 'list-digits)))
+(defmethod update-possibility-subsquares (squares x y &optional (comportement 'update-possibility))
+  (assert (or (eq comportement 'update-possibility) 
+	      (eq comportement 'list-digits)
+	      (eq comportement 'update-and-list)))
   (let ((list '())
 	(array (squares-array squares))
 	;; definition des debut et fin du petit carré qui contient square[x,y]
@@ -136,67 +123,33 @@
 	(departY (* (truncate (/ y *sqrt-size*)) *sqrt-size*))
 	(finY (- (* (1+ (truncate (/ y *sqrt-size*))) *sqrt-size*) 1)) )
     
-    (loop for x from departX to finX
-       do
-	 (loop for y from departY to finY
-	    do
+    (loop for x from departX to finX do
+	 (loop for y from departY to finY do
 	      (let ((value (digit(aref array x y))))
 		(if (not (zerop value))
 		    (setf list (cons value list))))))
-    (if (eq comportement 'list-digits)
-	;;si oui alors on retourne la liste des digit du petit carré
-	list
-        ;; sinon on met à jour les possible-digit de toutes les case du petit carré
-        (loop for x from departX to finX
-	   do
-	     (loop for y from departY to finY
-		do
-		   (update-possible squares x y list))))
-    (when (eq comportement 'update-and-list)
+    (unless (eq comportement 'list-digits)
+      (loop for x from departX to finX do
+	     (loop for y from departY to finY do
+		   (update-possibility squares x y list))))
+    (unless (eq comportement 'update-possibility)
       list)))
 	
 
-(defun update-possible (squares x y list)
-  ;;modifie le possible-digit du carré[x,y] en focntion de la liste
-  (setf (possible-digits (aref (squares-array squares) x y))
-		       (remove-possibility list (possible-digits (aref (squares-array squares) x y))))
+(defmethod update-possibility-all-square ( squares)
+  ;; met à jour les possibilité de chaque ligne et colonne
+  (loop for x from 0 to (1- *size*) do
+       (update-possibility-line squares x 'line 'update-possibility)
+       (update-possibility-line squares x 'column 'update-possibility)
        )
-
-(defun remove-possibility (list1 list2)
-;; renvoie list2 priver des éléménts de list1 
-  (if (endp list1)
-      list2
-      (remove-possibility (cdr list1) (remove (car list1) list2))))
-
-
-;; (defun update-possibility-line (square x)
-;;   (let ((list '())
-;; 	(array (squares-array squares)))
-;;     (loop for x from 0 to (1- *size*)
-;; 	  do
-;; 	     (let ((digit (digit(aref array x y))))
-;; 	       (if (not (zerop digit))
-;; 		   (setf list (cons digit list)))))
-;;     (loop for x from 0 to (1- *size*)
-;; 	  do
-;; 	     (setf (possible-digits (aref array x y))
-;; 		   (set-exclusive-or (possible-digits (aref array x y)) list)))))
+  ;;met a jour les possible digit des 9 sous carré 
+  (loop for y from 0 to (1- *sqrt-size*) do
+       (loop for x from 0 to (1- *sqrt-size*) do
+	    (update-possibility-subsquares squares 
+					   (* x *sqrt-size*) 
+					   (* y *sqrt-size*) 
+					   'update-possibility))))
 
 
-;; (defun update-possibility (squares)
-;;   (loop for y from 0 to (1- *size*)
-;; 	do
-;; 	   (let ((list '())
-;; 		 (array (squares-array squares)))
-;; 	     (loop for x from 0 to (1- *size*)
-;; 		   do
-;; 		      (let ((digit (digit(aref array x y))))
-;; 			(if (not (zerop digit))
-;; 			    (setf list (cons digit list)))))
-	     
-;; 	      (loop for x from 0 to (1- *size*)
-;; 		    do
-;; 		       (setf (possible-digits (aref array x y))
-;; 			     (set-exclusive-or (possible-digits (aref array x y)) list))))))
-		       
-			       
+(defmethod init-game (game)
+  (setf (game-squares game) (copy-squares (initial-grid game))))
