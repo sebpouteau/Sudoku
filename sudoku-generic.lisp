@@ -1,8 +1,8 @@
 
-					;===========================================
-					;==             Interface                 ==
-					;==  contenant toutes les méthodes utile  ==
-					;===========================================
+;;===========================================
+;;==             Interface                 ==
+;;==  contenant toutes les méthodes utile  ==
+;;===========================================
 
 (in-package :sudoku)
 		
@@ -45,8 +45,8 @@
    (protected :initform nil :initarg :protected :accessor protected))
   (:documentation "one square of the squares
          coor -> coordonnée du carré dans la grille
-         possible-digits -> valeur (nombre) rentrée par l'utilisateur
-         digit -> valeur (nombre) du carré
+         possible-digits -> valeurs (nombre) possibles du carré
+         digit -> valeur (nombre) affiché du carré
          protected -> vaut true si le nombre était au début => non-modifiable"))
 
 (defgeneric make-square (coor &optional digit)
@@ -81,6 +81,9 @@
   (:documentation "class containing a two dimensional array of instances of the square class \
                    to-fill -> nombre de cases vides (= à remplir)"))
 
+(defgeneric make-squares()
+  (:documentation "return array two dimensional (size,  size) "))
+
 (defgeneric to-fill (squares)
   (:documentation "return number of free case"))
 		  
@@ -92,7 +95,8 @@
 
 (defgeneric grid-to-square (squares)
   (:documentation "attribue the right coordinates to square-array"))
-
+(defgeneric copy-square(square))
+(defgeneric copy-squares(squares))
 
 ;; ==================
 ;; ==     Game     ==
@@ -117,9 +121,6 @@
 
 (defgeneric game-with-new-grid (&optional strategy)
   (:documentation "instance of game with a grid and STRATEGY"))
-
-(defgeneric init-sudoku ()
-  (:documentation "to initialize whatever you want to initialize"))
 
 (defgeneric game-do (game square)
   (:documentation 
