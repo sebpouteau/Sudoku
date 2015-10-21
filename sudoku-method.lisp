@@ -1,7 +1,7 @@
-					;===========================================
-					;==           Implémentation              ==
-					;==                                       ==
-					;===========================================
+;;===========================================
+;;==           Implémentation              ==
+;;==                                       ==
+;;===========================================
 
 
 (in-package :sudoku)
@@ -128,8 +128,8 @@
   (terpri)
   (princ "Enter the column letter: ")
   (setf column(read))
-  (loop while (not (or (<= 65 (char-code #'column) 90)
-		       (<= 97 (char-code #'column) 122))) do
+  (loop while (not (or (<= 65 (char-code column) 90)
+		       (<= 97 (char-code column) 122))) do
        (princ "You need to enter a letter. Try Again : ")
        (setf column(read)))
 
@@ -208,10 +208,14 @@
 	(loop for indiceMovible from 0 to (1- *size*)
 	  do    
 	     (let ((coor (line-colone indiceMovible indiceStatic sens)))
-	       (update-possible squares (car coor) (cadr coor) list))))))
+	       (update-possible squares (car coor) (cadr coor) list))))
+     (when (eq comportement 'update-and-list)
+      list)))
      
 
-
+;; comportement = list-digit retourne list digit 
+;; comportement = update-possibility alors change possible-digit square
+;; comportement = update-and-list change possible digit et renvoie la list des digit
 (defun list-digit-square-interior (squares x y &key (comportement 'update-possibility))
   (assert (or (eq comportement 'update-possibility) (eq comportement 'list-digits)))
   (let ((list '())
@@ -237,7 +241,9 @@
 	   do
 	     (loop for y from departY to finY
 		do
-		  (update-possible squares x y list))))))
+		   (update-possible squares x y list))))
+    (when (eq comportement 'update-and-list)
+      list)))
 	
 
 (defun update-possible (squares x y list)

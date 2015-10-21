@@ -10,7 +10,7 @@
 ;; =    Données    =
 ;; =================
 
-(defvar *sqrt-size* 5 "side of the side of a zone")
+(defvar *sqrt-size* 3 "side of the side of a zone")
 (defvar *size* (* *sqrt-size* *sqrt-size*))
 (defvar *nb-squares* (* *size* *size*))
 (defvar *game* nil "the current instance of a game")
