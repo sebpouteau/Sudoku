@@ -57,7 +57,7 @@
 		  (make-square (make-coor x y)  0)))))
 
 
-(defmethod change-digit ( squares x y value)
+(defmethod change-digit (squares x y value)
   (setf (digit (aref (squares-array squares) x y)) value)
   (update-possibility-line squares y 'line 'update-possibility)
   (update-possibility-line squares x 'column 'update-possibility)
@@ -87,7 +87,7 @@
 (defmethod remove-sublist(list1 list2)
   (if (endp list1)
       list2
-      (remove-sublist-list (cdr list1) (remove (car list1) list2))))
+      (remove-sublist (cdr list1) (remove (car list1) list2))))
 
 
 (defmethod update-possibility-line (squares indiceStatic &optional (sens 'line) (comportement 'update-possibility))

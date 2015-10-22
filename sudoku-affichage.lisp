@@ -8,6 +8,7 @@
 
 (defvar *line*)
 (defvar *column*)
+(defvar *value-digit*)
 
 
 ;; Affiche le jeu
@@ -56,9 +57,17 @@
   ;; Affiche la barre de fin
   (printBar "└───┴" "┴" "┘")
 
+  (terpri)
+
   ;; Demande la ligne, la colonne et la valeur de la case à modifier
-  (askCase '*line* '*column*)
-)
+  (askCase)
+
+  ;; Change la valeur de la case
+  (change-digit squares
+  		(- *column* 65)
+  		(1- *line*) 
+  		*value-digit*)
+  )
 
 
 ;; Affiche le titre
@@ -84,24 +93,60 @@
 
 
 ;; Affiche la demande la ligne, la colonne et la valeur de la case à modifier
-(defun askCase(line column)
-  (terpri)
+(defun askCase ()
+  ;; Demande la ligne
   (princ "Enter the column letter: ")
-  (setf column(read))
-  (loop while (not (or (<= 65 (char-code column) 90)
-		       (<= 97 (char-code column) 122))) do
-       (princ "You need to enter a letter. Try Again : ")
-       (setf column(read)))
+  (setf *column* (read-line))
+  (loop while (or (not (eq (length *column*) 1)) 
+		  (not (or 
+			(<= 65 (char-code (char *column* 0)) (+ 65 *size* -1))
+			(<= 97 (char-code (char *column* 0)) (+ 97 *size* -1))))) do
+       (princ "You need to enter a letter between A and ")
+       (princ (code-char (+ 65 *size* -1)))
+       (princ " : ")
+       (setf *column* (read-line)))
+  ;; Transforme la valeur de *column* en valeur numérique (utilisable plus facilement)
+  (when (<= 97 (char-code (char *column* 0)) (+ 97 *size* -1))
+      (setf *column* (- (char-code (char (string *column*) 0)) 32)))
+  ;; Affiche le résultat
+  (princ "  column : ")
+  (princ (code-char *column*))
+  (terpri)
+  (terpri)
 
+
+  ;; Demande la colonne
   (princ "Enter the line number: ")
-  (setq line(read))
-  (loop while (not (numberp line)) do
-       (princ "You need to enter a number. Try Again : ")
-       (setq line(read)))
+  (setf *line* (read-line))
+  (loop while (or (eq (length *line*) 0)
+		  (not (numberp (parse-integer (string *line*) :junk-allowed t)))
+		  (not (<= 1 (parse-integer (string *line*) :junk-allowed t) *size*))) do
+       (princ "You need to enter a number between 1 and ")
+       (princ *size*)
+       (princ " : ")
+       (setf *line* (read-line)))
+  ;; Transforme la valeur de *line* en valeur numérique (utilisable plus facilement)
+  (setf *line* (parse-integer *line*))
+  ;; Affiche le résultat
+  (princ "  line : ")
+  (princ *line*)
+  (terpri)
+  (terpri)
 
+
+  ;; Demande la valeur de la case
   (princ "Enter the digit: ")
-  (setq line(read))
-  (loop while (not (numberp line)) do
-       (princ "You need to enter a number. Try Again : ")
-       (setq line(read)))
+  (setf *value-digit* (read-line))
+  (loop while (or (not (eq (length *value-digit*) 1))
+		  (not (<= 49 (char-code (char *value-digit* 0)) 57))) do
+       (princ "You need to enter a number between 1 and 9 : ")
+       (setf *value-digit* (read-line)))
+  ;; Transforme la valeur de *line* en valeur numérique (utilisable plus facilement)
+  (setf *value-digit* (parse-integer *value-digit*))
+  ;; Affiche le résultat
+  (princ "  value-digit : ")
+  (princ *value-digit*)
+  (terpri)
+  (terpri)
 )
+
