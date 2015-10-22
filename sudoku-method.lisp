@@ -6,6 +6,7 @@
 
 (in-package :sudoku)
 
+
 ;; ========================
 ;; ==     Coordonnées    ==
 ;; ========================
@@ -49,28 +50,29 @@
 
 
 (defmethod grid-to-square (squares)
-  (loop for x from 0 to (1- *size*)
-     do
-       (loop for y from 0 to (1- *size*)
-	  do
+  (loop for x from 0 to (1- *size*) do
+       (loop for y from 0 to (1- *size*) do
 	    (setf (aref (squares-array squares) x y)
 		  (make-square (make-coor x y)  0)))))
 
-
-(defmethod change-digit (squares x y value)
-  (setf (digit (aref (squares-array squares) x y)) value)
-  (update-possibility-line squares y 'line 'update-possibility)
-  (update-possibility-line squares x 'column 'update-possibility)
-  (update-possibility-subsquares squares x y 'update-possibility))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defmethod change-digit ((squares squares) x y value)
+  (when (protected (aref (squares-array squares) x y))
+    (print "Impossible de changer cette case, Valeur Initial"))
+  (unless (protected (aref (squares-array squares) x y))
+    (setf (digit (aref (squares-array squares) x y)) value)
+    (setf (possible-digits (aref (squares-array squares) x y)) '())
+    (update-possibility-line squares y 'line 'update-possibility)
+    (update-possibility-line squares x 'column 'update-possibility)
+    (update-possibility-subsquares squares x y 'update-possibility)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  
 
 (defmethod copy-squares(squares)
   (let ((s (make-squares)))
     ;; copie de tous les carrés de squares et stocke le résultat dans s
-    (loop for y from 0 to (1- *size*)
-       do
-	 (loop for x from 0 to (1- *size*)
-	    do
+    (loop for y from 0 to (1- *size*) do
+	 (loop for x from 0 to (1- *size*) do
 	      (setf (aref (squares-array s) x y)
 		    (copy-square (aref (squares-array squares) x y))
 		    )
@@ -109,11 +111,11 @@
 		 (setf list (cons value list)))))
       
       (unless (eq comportement 'list-digits)
-	(loop for indiceMovible from 0 to (1- *size*) do    
-	     (let ((coor (line-column indiceMovible indiceStatic)))
-	       (update-possibility squares (car coor) (cadr coor) list))))
+	    (loop for indiceMovible from 0 to (1- *size*) do    
+	      (let ((coor (line-column indiceMovible indiceStatic)))
+	        (update-possibility squares (car coor) (cadr coor) list))))
       (unless (eq comportement 'update-possibility)
-	list))))
+	     list))))
 
 
 (defmethod update-possibility-subsquares (squares x y &optional (comportement 'update-possibility))
@@ -156,5 +158,37 @@
 					   'update-possibility))))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun list-to-2d-array (list)
+  (make-array (list (length list)
+                    (length (first list)))
+              :initial-contents list))
+
+(defmethod make-game (grid)
+  (make-instance 'game
+		 :game-squares (make-squares)
+		 :initial-grid (list-to-2d-array
+				(read (open grid)))))
+
+
+			   
 (defmethod init-game (game)
-  (setf (game-squares game) (copy-squares (initial-grid game))))
+  (loop for y from 0 to (1- *size*) do
+       (loop for x from 0 to (1- *size*) do
+	      (setf (digit (aref (squares-array (game-squares game))
+			  x y))
+		    (aref (initial-grid game) x y))
+	    (unless (zerop (aref (initial-grid game) x y))
+	      (setf (to-fill (game-squares game)) (1- (to-fill (game-squares game))))
+	      (setf (possible-digits (aref (squares-array (game-squares game)) x y)) '() )
+  	      (setf (protected (aref (squares-array (game-squares game)) x y)) T ))))
+  (update-possibility-all-square (game-squares game)))
+
+(defmethod change-digit ((squares game) x y value)
+  (change-digit (game-squares squares) x y value))
+
+(defmethod get-possibility ((square game) x y)
+  (possible-digits (aref (squares-array (game-squares square)) x y)))
+(defmethod get-possibility ((square squares) x y)
+  (possible-digits (aref (squares-array square) x y)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

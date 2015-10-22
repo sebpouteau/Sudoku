@@ -14,11 +14,12 @@
 (defvar *size* (* *sqrt-size* *sqrt-size*))
 (defvar *nb-squares* (* *size* *size*))
 (defvar *game* nil "the current instance of a game")
-(defvar *digits* '())
+(defvar *digits* (create-list-possibility *size* '()))
 
-(loop for i from 1 to *size* do
-     (setf *digits* (cons i *digits*)))
-(setf *digits* (reverse *digits*))
+(defun create-list-possibility (size list)
+  (if (< size 0)
+      list
+      (create-list-possibility (1- size) (cons size list))))
 
 
 ;; =========================
@@ -148,6 +149,10 @@
    (initial-grid :reader initial-grid :initarg :initial-grid))
   (:documentation "class for game instances"))
 
+(defgeneric make-grid (grid)
+  (:documentation "création instance game avec initial-grid etant une grille 
+                    (lien de la grille passé en parametre)"))
+
 (defgeneric game-squares (game)
   (:documentation "the squares of GAME"))
 
@@ -166,4 +171,9 @@
 (defgeneric game-do (game square)
   (:documentation 
    "plays coor/digit of square in the coor-square in squares of GAME"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defgeneric get-possibility (square x y)
+  (:documentation "retourne la liste des possibilitées du carré (x,y)"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
