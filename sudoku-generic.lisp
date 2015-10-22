@@ -6,18 +6,24 @@
 
 (in-package :sudoku)
 		
-;; =================
-;; =    Données    =
-;; =================
+;; =====================
+;; ==     Données     ==
+;; =====================
 
 (defvar *sqrt-size* 3 "side of the side of a zone")
 (defvar *size* (* *sqrt-size* *sqrt-size*))
 (defvar *nb-squares* (* *size* *size*))
 (defvar *game* nil "the current instance of a game")
-(defvar *digits* '(1 2 3 4 5 6 7 8 9))
-;; ========================
-;; ==     Coordonnée     ==
-;; ========================
+(defvar *digits* '())
+
+(loop for i from 1 to *size* do
+     (setf *digits* (cons i *digits*)))
+(setf *digits* (reverse *digits*))
+
+
+;; =========================
+;; ==     Coordonnées     ==
+;; =========================
 
 (defclass coor ()
   ((x :initarg :x :reader x-coor :type integer)
@@ -33,6 +39,7 @@
 (defgeneric make-coor (x y)
   (:documentation "instance of a coor [x,y]"))
 
+
 ;; ===================
 ;; ==     Carre     ==
 ;; ===================
@@ -45,7 +52,7 @@
    (protected :initform nil :initarg :protected :accessor protected))
   (:documentation "one square of the squares
          coor -> coordonnée du carré dans la grille
-         possible-digits -> valeurs (nombre) possibles du carré
+         possible-digits -> valeurs (nombres) possibles du carré
          digit -> valeur (nombre) affiché du carré
          protected -> vaut true si le nombre était au début => non-modifiable"))
 
@@ -74,9 +81,9 @@
   (:documentation "copie un square et retourne la copie"))
 
 
-;; ==================
-;; ==     Grid     ==
-;; ==================
+;; ====================
+;; ==     Grille     ==
+;; ====================
 
 (defclass squares ()
   ((squares-array :initarg :squares-array :reader squares-array :type array
@@ -90,7 +97,7 @@
 
 (defgeneric to-fill (squares)
   (:documentation "return number of free case"))
-		  
+
 (defgeneric make-squares-array (size)
   (:documentation "return array two dimensional (size,  size) "))
 
@@ -101,39 +108,35 @@
   (:documentation "attribue the right coordinates to square-array"))
 
 (defgeneric change-digit (squares x y value)
-(:documentation "change digit du carré [x,y]
-                  et met a jour les possibilité de la ligne, colonne et du sous-carré")) 
+  (:documentation "change la valeur digit du carré en (x,y)
+                  et met a jour les possibilités de la ligne, colonne et du sous-carré")) 
 
 (defgeneric copy-squares(squares)
-  (:documentation "copi un squares et retourne la copie"))
+  (:documentation "copie le squares passé en paramètre et retourne la copie"))
 
 
 (defgeneric update-possibility (squares x y list)
-  (:documentation "met à jour les possible digit du carré [x,y] par rapport à list
-                   Il supprime tout les éléments de list présent dans la list des possibilité"))
+  (:documentation "met à jour possible-digits du carré en (x,y) par rapport à list.
+                   Il supprime les éléments de possible-digits présent dans list."))
 
 (defgeneric remove-sublist (list1 list2)
-  (:documentation "supprime les éléments tout les élément de list2 présent dans list1 et renvoie list2"))
- 
-(defgeneric update-possibility-line (squares indiceStatic &optional sens comportement )
-  (:documentation "cette fonction a plusieur fonctionnalité configurer grace au deux paramètre optionnel:
-                     sens -> 'line ou 'column  ermet de parcourir soit les ligne ou les colonnes
-                     comportement -> 'list : renvoie les digit de la ligne ou colonne
-                                  -> 'update-possibility: met à jour les possible digit de tout les carrés d'une ligne ou colonne
-                                  -> 'update-and-list: met a jour les possible digit et renvoie la list des digit de la ligne ou colonne "
+  (:documentation "supprime les éléments de list2 présent dans list1 et renvoie list2"))
 
-))
+(defgeneric update-possibility-line (squares indiceStatic &optional sens comportement )
+  (:documentation "cette fonction compote plusieurs fonctionnalités qui sont modulables grace aux deux paramètres optionnels:
+                     sens -> 'line ou 'column permet de parcourir les lignes ou les colonnes
+                     comportement -> 'list : renvoie les digits de la ligne ou colonne
+                                  -> 'update-possibility : met à jour les possible-digits de tous les carrés d'une ligne ou colonne
+                                  -> 'update-and-list : met a jour les possible-digits et renvoie la list des digits de la ligne ou colonne"))
 
 (defgeneric update-possibility-subsquares (squares x y &optional comportement)
-  (:documentation "cette fonction permet de gérer les sous-carré configurable avec comportement
-                     comportement -> 'list : renvoie les digit du sous carré
-                                  -> 'update-possibility: met à jour les possible digit de tout les carrés du sous-carré
-                                  -> 'update-and-list: met a jour les possible digit et renvoie la list des digit du sous-carré "
-))
+  (:documentation "cette fonction permet de gérer les sous-carrés selon le comportement choisi
+                     comportement -> 'list : renvoie les digit du sous-carré
+                                  -> 'update-possibility : met à jour les possible-digits de tout les carrés du sous-carré
+                                  -> 'update-and-list : met à jour les possible-digits et renvoie la list des digits du sous-carré "))
 
 (defgeneric update-possibility-all-square (squares)
-(:documentation "met a jour les possible-digits de tout les carrés d'une grille")
-)
+  (:documentation "met à jour les possible-digits de tous les carrés de la grille passée en paramètre"))
 
 
 ;; ==================

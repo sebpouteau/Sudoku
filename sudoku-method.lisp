@@ -1,36 +1,38 @@
 ;;===========================================
 ;;==           Implémentation              ==
-;;==                                       ==
+;;==          FONCTIONS SUDOKU             ==
 ;;===========================================
 
 
 (in-package :sudoku)
 
 ;; ========================
-;; ==     Coordonnée     ==
+;; ==     Coordonnées    ==
 ;; ========================
+
 (defmethod make-coor (x y)
   (make-instance 'coor :x x :y y))
 
 
-  
 ;; ===================
 ;; ==     Carre     ==
 ;; ===================
 
-
 (defmethod make-square (coor &optional digit)
   (make-instance 'square :coor coor :digit digit))
+
 
 (defmethod assigned-p (square)
   (and (< 0 (digit square)) (<= (digit square) *size*)))
 
+
 (defmethod copy-square(square)
   (let (( s (make-square
-	     (coor square) (digit square))));; s nouveau square
-    (setf (possible-digits s) (possible-digits square)) ;; copie posibilité
-    (setf (protected s) (protected square)) ;; copie de la protection
+	     (coor square) (digit square)))) ;; s -> nouveau square
+    (setf (possible-digits s) (possible-digits square)) ;; copie de possible-digits de square
+    (setf (protected s) (protected square)) ;; copie de protected de square
     s))
+
 
 ;; =====================
 ;; ==     Squares     ==
@@ -38,51 +40,55 @@
 
 (defmethod make-squares()
   (let (( squares (make-instance 'squares)))
-   (grid-to-square squares)
+    (grid-to-square squares)
     squares))
 
 
 (defmethod make-squares-array (size)
   (make-array (list size size)))
 
+
 (defmethod grid-to-square (squares)
   (loop for x from 0 to (1- *size*)
-	do
-	   (loop for y from 0 to (1- *size*)
-		 do
-		    (setf (aref (squares-array squares) x y)
-			  (make-square (make-coor x y)  0))))
-  )
+     do
+       (loop for y from 0 to (1- *size*)
+	  do
+	    (setf (aref (squares-array squares) x y)
+		  (make-square (make-coor x y)  0)))))
+
+
 (defmethod change-digit ( squares x y value)
   (setf (digit (aref (squares-array squares) x y)) value)
   (update-possibility-line squares y 'line 'update-possibility)
   (update-possibility-line squares x 'column 'update-possibility)
   (update-possibility-subsquares squares x y 'update-possibility))
 
+
 (defmethod copy-squares(squares)
   (let ((s (make-squares)))
-    ;; copie de tout les square de squares et stockage dans s
+    ;; copie de tous les carrés de squares et stocke le résultat dans s
     (loop for y from 0 to (1- *size*)
-	  do
-	     (loop for x from 0 to (1- *size*)
-		   do
-		      (setf (aref (squares-array s) x y)
-			    (copy-square (aref (squares-array squares) x y))
-			    )
-		   ))
-    (setf (to-fill s) (to-fill squares)) ;; copie to-fill
+       do
+	 (loop for x from 0 to (1- *size*)
+	    do
+	      (setf (aref (squares-array s) x y)
+		    (copy-square (aref (squares-array squares) x y))
+		    )
+	      ))
+    (setf (to-fill s) (to-fill squares)) ;; copie to-fill de square
     s))
 
 
 (defmethod update-possibility (squares x y list)
   (setf (possible-digits (aref (squares-array squares) x y))
-		       (remove-sublist list (possible-digits (aref (squares-array squares) x y))))
-       )
+	(remove-sublist list (possible-digits (aref (squares-array squares) x y)))))
+
 
 (defmethod remove-sublist(list1 list2)
   (if (endp list1)
       list2
       (remove-sublist-list (cdr list1) (remove (car list1) list2))))
+
 
 (defmethod update-possibility-line (squares indiceStatic &optional (sens 'line) (comportement 'update-possibility))
   (assert (or (eq comportement 'update-possibility) (eq comportement 'list-digits) (eq comportement 'update-and-list)))
@@ -94,8 +100,8 @@
     (let ((list '())
 	  (array (squares-array squares)))
       (loop for indiceMovible from 0 to (1- *size*) do    
-	 ;; pour parcourire les colonnes c'est le x qui est static 
-	 ;; pour parcourire les line c'est le y qui est static 
+	 ;; pour parcourir les colonnes c'est le x qui est statique 
+	 ;; pour parcourir les lignes c'est le y qui est statique
 	   (let* ((coor (line-column indiceMovible indiceStatic))
 		  (value (digit(aref array (car coor) (cadr coor))))
 		  )
@@ -103,12 +109,11 @@
 		 (setf list (cons value list)))))
       
       (unless (eq comportement 'list-digits)
-	  (loop for indiceMovible from 0 to (1- *size*) do    
-	       (let ((coor (line-column indiceMovible indiceStatic)))
-		 (update-possibility squares (car coor) (cadr coor) list))))
+	(loop for indiceMovible from 0 to (1- *size*) do    
+	     (let ((coor (line-column indiceMovible indiceStatic)))
+	       (update-possibility squares (car coor) (cadr coor) list))))
       (unless (eq comportement 'update-possibility)
 	list))))
-
 
 
 (defmethod update-possibility-subsquares (squares x y &optional (comportement 'update-possibility))
@@ -117,7 +122,7 @@
 	      (eq comportement 'update-and-list)))
   (let ((list '())
 	(array (squares-array squares))
-	;; definition des debut et fin du petit carré qui contient square[x,y]
+	;; definition des débuts et fins du petit carré qui contient square (x,y)
 	(departX (* (truncate (/ x *sqrt-size*)) *sqrt-size*))
 	(finX (- (* (1+ (truncate (/ x *sqrt-size*))) *sqrt-size*) 1)) 
 	(departY (* (truncate (/ y *sqrt-size*)) *sqrt-size*))
@@ -130,19 +135,19 @@
 		    (setf list (cons value list))))))
     (unless (eq comportement 'list-digits)
       (loop for x from departX to finX do
-	     (loop for y from departY to finY do
-		   (update-possibility squares x y list))))
+	   (loop for y from departY to finY do
+		(update-possibility squares x y list))))
     (unless (eq comportement 'update-possibility)
       list)))
-	
 
-(defmethod update-possibility-all-square ( squares)
-  ;; met à jour les possibilité de chaque ligne et colonne
+
+(defmethod update-possibility-all-square (squares)
+  ;; met à jour les possible-digits de chaque carré, par rapport aux lignes et aux colonne
   (loop for x from 0 to (1- *size*) do
        (update-possibility-line squares x 'line 'update-possibility)
        (update-possibility-line squares x 'column 'update-possibility)
        )
-  ;;met a jour les possible digit des 9 sous carré 
+  ;; met a jour les possible-digits des 9 sous-carrés
   (loop for y from 0 to (1- *sqrt-size*) do
        (loop for x from 0 to (1- *sqrt-size*) do
 	    (update-possibility-subsquares squares 

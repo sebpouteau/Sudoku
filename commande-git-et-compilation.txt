@@ -1,0 +1,39 @@
+=========================
+==    Commandes git    ==
+=========================
+
+== Commandes de base ==
+ - git pull -> récupère les modifications
+ - git add fichier -> ajoute le "fichier" que tu as modifié
+ - git commit -m "message" -> commit les fichiers que tu as "add"
+ - git push -> envoie le tout
+
+
+== Fonctionnalités "Bonus" ==
+ - git status -> permet de connaitre le status des fichiers au sein du répertoire du
+          projet (savoir si il y en a des nouveaux, ou si certains ont été modifiés)
+ - git diff -> permet de connaitre quelles sont les modifications qui ont été apportées
+          aux fichiers (quelles lignes de code ont changé)
+ - git log -> permet de voir les différents commit
+
+
+== Revenir à une ancienne version du projet ==
+ - git reset HEAD^ -> permet d'annuler le dernier commit et de revenir à l'avant dernier
+ - git reset HEAD^^ -> permet de revenir à l'avant-avant dernier commit
+ - git reset 32b1.. -> permet de revenir à un commit précis (numéro récupéré avec git log)
+ Ensuite pour restaurer les fichiers :
+ - git status -> indique tous les fichiers modifiés
+ - git checkout -- fichier1 fichier2 -> récupère les fichiers souhaités.
+
+
+=========================================
+==    Commandes lisp pour le projet    ==
+=========================================
+
+Compiler le Projet et créer une grille remplie :
+ - (push "/home/jimgouraud/sudoku/" asdf:*central-registry*)
+     -> remplacer "/home/jimgouraud/sudoku" par votre répertoire contenant le sudoku
+ - (asdf:load-system "sudoku")
+ - Ctr-C Alt-p SUDOKU
+ - (defparameter *grid* (make-instance 'squares))
+ - (grid-to-square *grid*)

@@ -1,9 +1,0 @@
-(push "/home/jimgouraud/sudoku/" asdf:*central-registry*)
-
-(asdf:load-system "sudoku")
-
-Ctr-C Alt-p SUDOKU
-
-(defparameter *grid* (make-instance 'squares))
-
-(grid-to-square *grid*)

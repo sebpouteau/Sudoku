@@ -12,13 +12,13 @@
 
 ;; Affiche le jeu
 (defun printgrid (squares)
-  ; Affiche le titre
+  ;; Affiche le titre
   (printTitle)
 
-  ; Affiche la barre au dessus des lettres
+  ;; Affiche la barre au dessus des lettres
   (printBar "    ┌" "┬" "┐")
 
-  ; Affiche les lettres des colonnes
+  ;; Affiche les lettres des colonnes
   (princ "    |")
   (loop for cpt from 0 to (1- *size*) do
        (princ " ")
@@ -28,10 +28,10 @@
 	   (princ " ")))
   (terpri)
 
-  ; Affiche la barre en dessous des lettres
+  ;; Affiche la barre en dessous des lettres
   (printBar "┌───┼" "┤" "┤")
 
-  ; Affiche les chiffres des lignes, ainsi que la grille
+  ;; Affiche les chiffres des lignes, ainsi que la grille
   (loop for y from 0 to (1- *size*)
      do
        (princ "| ")
@@ -49,19 +49,19 @@
 
        (when (and (eq (mod (1+ y) *sqrt-size*) 0)
 		(not (eq y (1- *size*))))
-	 ; Affiche les barres séparant les zones
+	 ;; Affiche les barres séparant les zones
 	 (printBar "├───┼" "┼" "┤")
 	 ))
 
-  ; Affiche la barre de fin
+  ;; Affiche la barre de fin
   (printBar "└───┴" "┴" "┘")
 
-
-  (setf *line* 0)
-  (setf *column* 0)
+  ;; Demande la ligne, la colonne et la valeur de la case à modifier
   (askCase '*line* '*column*)
 )
 
+
+;; Affiche le titre
 (defun printTitle ()
   (princ "
  ╔═══╗ ╔   ╗ ╔══╗ ╔═══╗ ╔ ╔═ ╔   ╗
@@ -70,16 +70,20 @@
 
 "))
 
+
+;; Affiche une barre en fonction *size* et des paramètres rentrés
 (defun printBar (debut milieu fin)
   (princ debut)
-  (loop for cpt from 0 to (1- *size*) do
+  (loop for cpt from 1 to *size* do
        (princ "───")
-       (when (and (eq (mod (1+ cpt) *sqrt-size*) 0)
-		  (not (eq (1+ cpt) *size*)))
+       (when (and (eq (mod cpt *sqrt-size*) 0)
+		  (not (eq cpt *size*)))
 	 (princ milieu)))
   (princ fin)
   (terpri))
 
+
+;; Affiche la demande la ligne, la colonne et la valeur de la case à modifier
 (defun askCase(line column)
   (terpri)
   (princ "Enter the column letter: ")
@@ -90,6 +94,12 @@
        (setf column(read)))
 
   (princ "Enter the line number: ")
+  (setq line(read))
+  (loop while (not (numberp line)) do
+       (princ "You need to enter a number. Try Again : ")
+       (setq line(read)))
+
+  (princ "Enter the digit: ")
   (setq line(read))
   (loop while (not (numberp line)) do
        (princ "You need to enter a number. Try Again : ")
