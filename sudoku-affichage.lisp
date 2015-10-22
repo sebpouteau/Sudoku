@@ -10,9 +10,31 @@
 (defvar *column*)
 (defvar *value-digit*)
 
+;; Affiche le jeu Sudoku
+(defun sudoku(game)
+  ;; Affiche la grille
+  (printgrid game)
+  (terpri)
 
-;; Affiche le jeu
-(defun printgrid (squares)
+  ;; Demande la ligne, la colonne et la valeur de la case à modifier
+  (askCase)
+
+  ;; Change la valeur de la case
+  (change-digit (game-squares game)
+  		(- *column* 65)
+  		(1- *line*) 
+  		*value-digit*)
+  (terpri)
+  )
+
+
+;; Affiche la grille du jeu
+(defmethod printgrid ((squares game))
+  (printgrid (game-squares squares)))
+
+
+;; Affiche le grille
+(defmethod printgrid ((squares squares))
   ;; Affiche le titre
   (printTitle)
 
@@ -55,19 +77,7 @@
 	 ))
 
   ;; Affiche la barre de fin
-  (printBar "└───┴" "┴" "┘")
-
-  (terpri)
-
-  ;; Demande la ligne, la colonne et la valeur de la case à modifier
-  (askCase)
-
-  ;; Change la valeur de la case
-  (change-digit squares
-  		(- *column* 65)
-  		(1- *line*) 
-  		*value-digit*)
-  )
+  (printBar "└───┴" "┴" "┘"))
 
 
 ;; Affiche le titre
@@ -106,8 +116,9 @@
        (princ " : ")
        (setf *column* (read-line)))
   ;; Transforme la valeur de *column* en valeur numérique (utilisable plus facilement)
-  (when (<= 97 (char-code (char *column* 0)) (+ 97 *size* -1))
-      (setf *column* (- (char-code (char (string *column*) 0)) 32)))
+  (if (<= 97 (char-code (char *column* 0)) (+ 97 *size* -1))
+      (setf *column* (- (char-code (char (string *column*) 0)) 32))
+      (setf *column* (char-code (char (string *column*) 0))))
   ;; Affiche le résultat
   (princ "  column : ")
   (princ (code-char *column*))
@@ -137,16 +148,18 @@
   ;; Demande la valeur de la case
   (princ "Enter the digit: ")
   (setf *value-digit* (read-line))
-  (loop while (or (not (eq (length *value-digit*) 1))
-		  (not (<= 49 (char-code (char *value-digit* 0)) 57))) do
-       (princ "You need to enter a number between 1 and 9 : ")
+  (loop while (or (eq (length *value-digit*) 0)
+		  (not (numberp (parse-integer (string *value-digit*) :junk-allowed t)))
+		  (not (<= 1 (parse-integer (string *value-digit*) :junk-allowed t) *size*))) do
+       (princ "You need to enter a number between 1 and ")
+       (princ *size*)
+       (princ " : ")
        (setf *value-digit* (read-line)))
   ;; Transforme la valeur de *line* en valeur numérique (utilisable plus facilement)
   (setf *value-digit* (parse-integer *value-digit*))
   ;; Affiche le résultat
   (princ "  value-digit : ")
   (princ *value-digit*)
-  (terpri)
   (terpri)
 )
 

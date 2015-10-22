@@ -14,12 +14,14 @@
 (defvar *size* (* *sqrt-size* *sqrt-size*))
 (defvar *nb-squares* (* *size* *size*))
 (defvar *game* nil "the current instance of a game")
-(defvar *digits* (create-list-possibility *size* '()))
 
 (defun create-list-possibility (size list)
   (if (< size 0)
       list
       (create-list-possibility (1- size) (cons size list))))
+
+(defvar *digits* (create-list-possibility *size* '()))
+
 
 
 ;; =========================
@@ -171,9 +173,9 @@
 (defgeneric game-do (game square)
   (:documentation 
    "plays coor/digit of square in the coor-square in squares of GAME"))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defgeneric get-possibility (square x y)
   (:documentation "retourne la liste des possibilitées du carré (x,y)"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defgeneric printgrid (squares)
+ (:documentation "affiche la grille du jeu"))
