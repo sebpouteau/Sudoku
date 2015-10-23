@@ -10,16 +10,15 @@
 ;; ==     Données     ==
 ;; =====================
 
-(defvar *sqrt-size* 3 "side of the side of a zone")
-(defvar *size* (* *sqrt-size* *sqrt-size*))
-(defvar *nb-squares* (* *size* *size*))
-(defvar *game* nil "the current instance of a game")
-
 (defun create-list-possibility (size list)
   (if (< size 0)
       list
       (create-list-possibility (1- size) (cons size list))))
 
+(defvar *sqrt-size* 3 "side of the side of a zone")
+(defvar *size* (* *sqrt-size* *sqrt-size*))
+(defvar *nb-squares* (* *size* *size*))
+(defvar *game* nil "the current instance of a game")
 (defvar *digits* (create-list-possibility *size* '()))
 
 

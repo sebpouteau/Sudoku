@@ -79,6 +79,8 @@
   ;; Affiche la barre de fin
   (printBar "└───┴" "┴" "┘"))
 
+(defmethod printgrid ((squares game))
+  (printgrid (game-squares squares)))
 
 ;; Affiche le titre
 (defun printTitle ()
