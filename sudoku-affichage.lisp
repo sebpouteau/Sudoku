@@ -11,8 +11,9 @@
 (defvar *value-digit*)
 
 
+
 ;; Affiche le jeu
-(defun printgrid (squares)
+(defmethod printgrid ((squares squares))
   ;; Affiche le titre
   (printTitle)
 
@@ -69,6 +70,8 @@
   		*value-digit*)
   )
 
+(defmethod printgrid ((squares game))
+  (printgrid (game-squares squares)))
 
 ;; Affiche le titre
 (defun printTitle ()

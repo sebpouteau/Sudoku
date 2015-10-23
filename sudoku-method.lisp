@@ -83,7 +83,7 @@
 
 (defmethod update-possibility (squares x y list)
   (setf (possible-digits (aref (squares-array squares) x y))
-	(remove-sublist list (possible-digits (aref (squares-array squares) x y)))))
+	(remove-sublist list *digits*)))
 
 
 (defmethod remove-sublist(list1 list2)
