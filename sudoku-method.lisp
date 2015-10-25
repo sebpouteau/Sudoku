@@ -194,6 +194,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+
 (defmethod game-over(game)
   (let ((bool '()))
     (loop for y from 0 to (1- *size*) do
@@ -204,6 +205,7 @@
 		       (setf bool t))
 		      
 		      ((= (to-fill (game-squares game)) 0)
-		       (setf bool 'win)))
+		       (setf bool t)))
 		)))
     bool))
+
