@@ -192,3 +192,5 @@
 (defmethod get-possibility ((square squares) x y)
   (possible-digits (aref (squares-array square) x y)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
