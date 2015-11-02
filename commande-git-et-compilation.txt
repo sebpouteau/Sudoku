@@ -39,5 +39,5 @@ Compiler le Projet et créer une grille remplie :
  - (defparameter *grid* (make-instance 'squares))
  - (grid-to-square *grid*)
 
- - (defparameter *game* (make-game "../../irdurand/Programmation3/15-16/sudoku/Grids/1.sudoku"))
+ - (defparameter *game* (make-game "Grids/1.sudoku"))
  - (init-game *game*)

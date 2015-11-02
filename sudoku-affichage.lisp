@@ -13,79 +13,51 @@
 ;; Affiche le jeu Sudoku
 (defun sudoku(game)
   ;; Affiche la grille
-  (printgrid game)
-  (terpri)
+  (print-grid game)
 
   ;; Demande la ligne, la colonne et la valeur de la case à modifier
-  (askCase)
+  (ask-case)
 
   ;; Change la valeur de la case
   (change-digit (game-squares game)
   		(- *column* 65)
   		(1- *line*) 
   		*value-digit*)
-  (terpri)
   )
 
 
 ;; Affiche la grille du jeu
-(defmethod printgrid ((squares game))
-  (printgrid (game-squares squares)))
+(defmethod print-grid ((squares game))
+  (print-grid (game-squares squares)))
 
 
-;; Affiche le grille
-(defmethod printgrid ((squares squares))
+;; Affiche le grille passé en paramètre
+(defmethod print-grid ((squares squares))
   ;; Affiche le titre
-  (printTitle)
+  (print-title)
 
   ;; Affiche la barre au dessus des lettres
-  (printBar " " " " "┌" "┬" "┐")
+  (print-bar " " " " "┌" "┬" "┐")
 
   ;; Affiche les lettres des colonnes
-  (princ " ")
-  (loop for cpt from 1 to *sqrt-size* do
-       (princ " ")) ;; permet l'extensibilité de la grille
-  (princ "|")
-  (loop for cpt from 0 to (1- *size*) do
-       (princ " ")
-       (princ (code-char (+ cpt 65)))
-       (if (eq (mod (1+ cpt) *sqrt-size*) 0)
-	   (princ " |")
-	   (princ " ")))
-  (terpri)
+  (print-column)
 
   ;; Affiche la barre en dessous des lettres
-  (printBar "─" "┌" "┼" "┼" "┤")
+  (print-bar "─" "┌" "┼" "┼" "┤")
 
   ;; Affiche les chiffres des lignes, ainsi que la grille
-  (loop for y from 0 to (1- *size*) do
-       (princ "| ")
-       (princ (1+ y))
-       (if (and (< 9 *size*) (< y 9))
-		(princ " "))
-       (princ " |")
-       (loop for x from 0 to (1- *size*) do
-	    (princ " ")
-	    (princ (digit (aref (squares-array squares) x y)))
-	    (if (eq (mod (1+ x) *sqrt-size*) 0)
-		(princ " |")
-		(princ " "))
-	    )
-       (terpri)
-
-       (when (and (eq (mod (1+ y) *sqrt-size*) 0)
-		(not (eq y (1- *size*))))
-	 ;; Affiche les barres séparant les zones
-	 (printBar "─" "├" "┼" "┼" "┤")
-	 ))
+  (print-line squares)
 
   ;; Affiche la barre de fin
-  (printBar "─" "└" "┴" "┴" "┘"))
+  (print-bar "─" "└" "┴" "┴" "┘")
+
+  (terpri)
+  )
 
 
 ;; Affiche le titre
-(defun printTitle ()
-  (princ "
+(defun print-title ()
+  (princ"
  ╔═══╗ ╔   ╗ ╔══╗  ╔═══╗ ╔ ╔ ╔   ╗
  ╚═══╗ ║   ║ ║   ║ ║   ║ ╠╣  ║   ║
  ╚═══╝ ╚═══╝ ╚══╝  ╚═══╝ ╚ ╚ ╚═══╝
@@ -94,23 +66,75 @@
 
 
 ;; Affiche une barre en fonction *size* et des paramètres rentrés
-(defun printBar (espacement debut debut2 milieu fin)
+(defun print-bar (espacement debut debut2 milieu fin)
   (princ debut)
   (loop for cpt from 1 to *sqrt-size* do
-       (princ espacement))
+    (princ espacement))
   (princ debut2)
   (loop for cpt from 1 to *size* do
-       (princ "───")
-       (when (and (eq (mod cpt *sqrt-size*) 0)
-		  (not (eq cpt *size*)))
-	 (princ milieu)))
+    (princ "───")
+    (if (< 9 *size*) 
+	(princ "─"))
+    (when (and (eq (mod cpt *sqrt-size*) 0)
+	       (not (eq cpt *size*)))
+      (princ milieu)))
   (princ fin)
   (terpri))
 
 
+;; Affiche les lettres des colonnes
+(defun print-column()
+  (princ " ")
+  (loop for cpt from 1 to *sqrt-size* do 
+    (princ " ")) ;; permet l'extensibilité de la grille
+  (princ "| ")
+  (loop for cpt from 0 to (1- *size*) do
+    (when (< 9 *size*)
+	(princ " "))
+    (format T "~d " (code-char (+ cpt 65)))
+    (if (eq (mod (1+ cpt) *sqrt-size*) 0)
+	(princ "| ")
+	(princ " ")))
+  (terpri)
+  )
+
+
+;; Affiche les chiffres des lignes, ainsi que la grille
+(defun print-line (squares)
+  (loop for y from 0 to (1- *size*) do
+    (if (< 9 *size*) 
+	(format T "| ~2d |" (1+ y))
+	(format T "| ~d |" (1+ y)))
+    (loop for x from 0 to (1- *size*) do
+      (if (< 9 *size*) 
+	  (format T " ~2d " (digit (aref (squares-array squares) x y)))
+	  (format T " ~d " (digit (aref (squares-array squares) x y))))
+      (when (eq (mod (1+ x) *sqrt-size*) 0)
+	(princ "|")))
+    (terpri)
+    (when (and (eq (mod (1+ y) *sqrt-size*) 0)
+	       (not (eq y (1- *size*))))
+      ;; Affiche les barres séparant les zones
+      (print-bar "─" "├" "┼" "┼" "┤")
+      ))
+  )
+
+
+
 ;; Affiche la demande la ligne, la colonne et la valeur de la case à modifier
-(defun askCase ()
+(defun ask-case ()
   ;; Demande la ligne
+  (ask-line)
+
+  ;; Demande la colonne
+  (ask-column)
+
+  ;; Demande la valeur de la case
+  (ask-digit)
+  )
+
+;; Demande la ligne
+(defun ask-line ()
   (princ "Enter the column letter: ")
   (setf *column* (read-line))
   (loop while (or (not (eq (length *column*) 1)) 
@@ -129,10 +153,11 @@
   (princ "  column : ")
   (princ (code-char *column*))
   (terpri)
-  (terpri)
+  (terpri))
 
 
-  ;; Demande la colonne
+;; Demande la colonne
+(defun ask-column ()
   (princ "Enter the line number: ")
   (setf *line* (read-line))
   (loop while (or (eq (length *line*) 0)
@@ -148,10 +173,11 @@
   (princ "  line : ")
   (princ *line*)
   (terpri)
-  (terpri)
+  (terpri))
 
 
-  ;; Demande la valeur de la case
+;; Demande la valeur de la case
+(defun ask-digit ()
   (princ "Enter the digit: ")
   (setf *value-digit* (read-line))
   (loop while (or (eq (length *value-digit*) 0)
@@ -167,4 +193,25 @@
   (princ "  value-digit : ")
   (princ *value-digit*)
   (terpri)
-)
+  )
+
+
+
+;; Affiche "Game Over !"
+(defun print-game-over ()
+  (princ "
+ ╔══╗ ╔══╗ ╔╗╔╗ ╔═╗     ╔══╗ ╗  ╔ ╔═╗ ╔═╗   ║
+ ║ ═╗ ╠══╣ ║╚╝║ ╠╣      ║  ║ ║  ║ ╠╣  ╠╣    ║
+ ╚══╝ ╚  ╝ ╝  ╚ ╚═╝     ╚══╝  ╚╝  ╚═╝ ╚ ╚   ═
+
+"))
+
+;; Affiche "You Win !"
+(defun print-win ()
+  (princ"
+                        ═
+ ╗ ╔ ╔══╗ ╗  ╔     ╗  ╔ ╔ ╔╗  ╗   ║
+ ╠═╝ ║  ║ ║  ║     ║╔╗║ ║ ║ ╚ ║   ║
+ ╚   ╚══╝ ╚══╝     ╚╝╚╝ ╚ ╚  ╚╝   ═
+
+"))
