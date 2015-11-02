@@ -11,7 +11,7 @@
 ;; =====================
 
 (defun create-list-possibility (size list)
-  (if (= size 0)
+  (if (< size 0)
       list
       (create-list-possibility (1- size) (cons size list))))
 
