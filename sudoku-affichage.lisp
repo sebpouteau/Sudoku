@@ -39,10 +39,13 @@
   (printTitle)
 
   ;; Affiche la barre au dessus des lettres
-  (printBar "    ┌" "┬" "┐")
+  (printBar " " " " "┌" "┬" "┐")
 
   ;; Affiche les lettres des colonnes
-  (princ "    |")
+  (princ " ")
+  (loop for cpt from 1 to *sqrt-size* do
+       (princ " ")) ;; permet l'extensibilité de la grille
+  (princ "|")
   (loop for cpt from 0 to (1- *size*) do
        (princ " ")
        (princ (code-char (+ cpt 65)))
@@ -52,16 +55,16 @@
   (terpri)
 
   ;; Affiche la barre en dessous des lettres
-  (printBar "┌───┼" "┤" "┤")
+  (printBar "─" "┌" "┼" "┼" "┤")
 
   ;; Affiche les chiffres des lignes, ainsi que la grille
-  (loop for y from 0 to (1- *size*)
-     do
+  (loop for y from 0 to (1- *size*) do
        (princ "| ")
        (princ (1+ y))
+       (if (and (< 9 *size*) (< y 9))
+		(princ " "))
        (princ " |")
-       (loop for x from 0 to (1- *size*)
-	  do
+       (loop for x from 0 to (1- *size*) do
 	    (princ " ")
 	    (princ (digit (aref (squares-array squares) x y)))
 	    (if (eq (mod (1+ x) *sqrt-size*) 0)
@@ -73,28 +76,29 @@
        (when (and (eq (mod (1+ y) *sqrt-size*) 0)
 		(not (eq y (1- *size*))))
 	 ;; Affiche les barres séparant les zones
-	 (printBar "├───┼" "┼" "┤")
+	 (printBar "─" "├" "┼" "┼" "┤")
 	 ))
 
   ;; Affiche la barre de fin
-  (printBar "└───┴" "┴" "┘"))
+  (printBar "─" "└" "┴" "┴" "┘"))
 
-(defmethod printgrid ((squares game))
-  (printgrid (game-squares squares)))
 
 ;; Affiche le titre
 (defun printTitle ()
   (princ "
- ╔═══╗ ╔   ╗ ╔══╗ ╔═══╗ ╔ ╔═ ╔   ╗
- ╚═══╗ ║   ║    ║ ║   ║ ╠═╣  ║   ║
- ╚═══╝ ╚═══╝ ╚══╝ ╚═══╝ ╚ ╚═ ╚═══╝
+ ╔═══╗ ╔   ╗ ╔══╗  ╔═══╗ ╔ ╔ ╔   ╗
+ ╚═══╗ ║   ║ ║   ║ ║   ║ ╠╣  ║   ║
+ ╚═══╝ ╚═══╝ ╚══╝  ╚═══╝ ╚ ╚ ╚═══╝
 
 "))
 
 
 ;; Affiche une barre en fonction *size* et des paramètres rentrés
-(defun printBar (debut milieu fin)
+(defun printBar (espacement debut debut2 milieu fin)
   (princ debut)
+  (loop for cpt from 1 to *sqrt-size* do
+       (princ espacement))
+  (princ debut2)
   (loop for cpt from 1 to *size* do
        (princ "───")
        (when (and (eq (mod cpt *sqrt-size*) 0)
@@ -164,4 +168,3 @@
   (princ *value-digit*)
   (terpri)
 )
-

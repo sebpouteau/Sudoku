@@ -198,3 +198,20 @@
 (defmethod get-possibility ((square squares) x y)
   (possible-digits (aref (squares-array square) x y)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(defmethod game-over(game)
+  (let ((bool '()))
+    (loop for y from 0 to (1- *size*) do
+	 (loop for x from 0 to (1- *size*) do
+	      (let ((square (aref (squares-array (game-squares game))
+				  y x)))
+		(cond ((and (= (digit square) 0) (eq (possible-digits square) NIL))
+		       (setf bool t))
+		      
+		      ((= (to-fill (game-squares game)) 0)
+		       (setf bool t)))
+		)))
+    bool))
+
