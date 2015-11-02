@@ -1,8 +1,8 @@
 
-;;===========================================
-;;==             Interface                 ==
-;;==  contenant toutes les méthodes utile  ==
-;;===========================================
+;;============================================
+;;==             Interface                  ==
+;;==  contenant toutes les méthodes utiles  ==
+;;============================================
 
 (in-package :sudoku)
 		
@@ -11,7 +11,7 @@
 ;; =====================
 
 (defun create-list-possibility (size list)
-  (if (< size 0)
+  (if (= size 0)
       list
       (create-list-possibility (1- size) (cons size list))))
 
@@ -176,5 +176,5 @@
 (defgeneric get-possibility (square x y)
   (:documentation "retourne la liste des possibilitées du carré (x,y)"))
 
-(defgeneric printgrid (squares)
+(defgeneric print-grid (squares)
  (:documentation "affiche la grille du jeu"))
