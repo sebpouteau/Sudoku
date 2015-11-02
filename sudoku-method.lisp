@@ -55,11 +55,17 @@
 	    (setf (aref (squares-array squares) x y)
 		  (make-square (make-coor x y)  0)))))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defmethod change-digit ((squares squares) x y value)
-  (when (protected (aref (squares-array squares) x y))
-    (print "Impossible de changer cette case, Valeur Initial"))
-  (unless (protected (aref (squares-array squares) x y))
+  (if (protected (aref (squares-array squares) x y))
+    (print "Impossible de changer cette case, Valeur Initial")
+    (unless ( = (digit (aref (squares-array squares) x y)) 0)
+      (setf (digit (aref (squares-array squares) x y)) value)
+      (update-possibility-all-square squares)))
+      
+  (unless (and (protected (aref (squares-array squares) x y))
+	       (not (= (digit (aref (squares-array squares) x y)) 0)))
     (setf (digit (aref (squares-array squares) x y)) value)
     (setf (possible-digits (aref (squares-array squares) x y)) '())
     (update-possibility-line squares y 'line 'update-possibility)
