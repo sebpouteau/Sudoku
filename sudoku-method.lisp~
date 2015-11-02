@@ -89,7 +89,7 @@
 
 (defmethod update-possibility (squares x y list)
   (setf (possible-digits (aref (squares-array squares) x y))
-	(remove-sublist list (get-possibility squares x y))))
+	(remove-sublist list *digits*)))
 
 
 (defmethod remove-sublist(list1 list2)
@@ -150,10 +150,6 @@
 
 
 (defmethod update-possibility-all-square (squares)
-  (loop for y from 0 to (1- *size*) do
-    (loop for x from 0 to (1- *size*) do
-      (setf (possible-digits (aref (squares-array squares) x y))
-	    *digits*)))
   ;; met à jour les possible-digits de chaque carré, par rapport aux lignes et aux colonne
   (loop for x from 0 to (1- *size*) do
        (update-possibility-line squares x 'line 'update-possibility)
@@ -185,8 +181,8 @@
 (defmethod init-game (game)
   (loop for y from 0 to (1- *size*) do
        (loop for x from 0 to (1- *size*) do
-	      (setf (digit (aref (squares-array (game-squares game))X
-			  y x))
+	      (setf (digit (aref (squares-array (game-squares game))
+			  x y))
 		    (aref (initial-grid game) x y))
 	    (unless (zerop (aref (initial-grid game) x y))
 	      (setf (to-fill (game-squares game)) (1- (to-fill (game-squares game))))
@@ -206,7 +202,7 @@
 
 
 (defmethod game-over(game)
-  (let ((bool NIL))
+  (let ((bool '()))
     (loop for y from 0 to (1- *size*) do
 	 (loop for x from 0 to (1- *size*) do
 	      (let ((square (aref (squares-array (game-squares game))
