@@ -70,7 +70,8 @@
     (setf (possible-digits (aref (squares-array squares) x y)) '())
     (update-possibility-line squares y 'line 'update-possibility)
     (update-possibility-line squares x 'column 'update-possibility)
-    (update-possibility-subsquares squares x y 'update-possibility)))
+    (update-possibility-subsquares squares x y 'update-possibility)
+    (setf (to-fill squares) (1- (to-fill squares )))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   
 
@@ -183,10 +184,10 @@
 
 			   
 (defmethod init-game (game)
-  (loop for y from 0 to (1- *size*) do
-       (loop for x from 0 to (1- *size*) do
-	      (setf (digit (aref (squares-array (game-squares game))X
-			  y x))
+  (loop for x from 0 to (1- *size*) do
+       (loop for y from 0 to (1- *size*) do
+	      (setf (digit (aref (squares-array (game-squares game))
+			  x y))
 		    (aref (initial-grid game) x y))
 	    (unless (zerop (aref (initial-grid game) x y))
 	      (setf (to-fill (game-squares game)) (1- (to-fill (game-squares game))))
@@ -212,9 +213,11 @@
 	      (let ((square (aref (squares-array (game-squares game))
 				  y x)))
 		(cond ((and (= (digit square) 0) (eq (possible-digits square) NIL))
+		       (print-game-over)
 		       (setf bool t))
 		      
 		      ((= (to-fill (game-squares game)) 0)
+		       (print-win)
 		       (setf bool t)))
 		)))
     bool))

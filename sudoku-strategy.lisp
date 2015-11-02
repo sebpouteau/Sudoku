@@ -12,11 +12,12 @@
   (update-possibility-all-square (game-squares game))
   (block fin
     ;; Test si il existe un carré n'ayant qu'une possibilité
-    ;(loop for y from 0 to (1- *size*) do
-      ;(loop for x from 0 to (1- *size*) do
-;	(when (and (not (protected ( aref (squares-array (game-squares game)) x y)))
-	;	   (= 1 (length (get-possibility game x y))))
-	;  (return-from fin (values x y (car (get-possibility game x y)))))))
+    (loop for y from 0 to (1- *size*) do
+      (loop for x from 0 to (1- *size*) do
+	(when (and (not (protected ( aref (squares-array (game-squares game)) x y)))
+		   (= 1 (length (get-possibility game x y)))
+		   (eq (digit (aref (squares-array (game-squares game)) x y)) 0))
+	  (return-from fin (values x y (car (get-possibility game x y)))))))
     
     ;; test plus approfondit
     ;(loop for y from 0 to (1- *size*) do
@@ -26,7 +27,9 @@
     (loop for y from 0 to (1- *size*) do
       (loop for x from 0 to (1- *size*) do
 	(let ((list (verifier-subsquare game x y )))
-	  (if (= (length list) 1)
+	  (if (and (= (length list) 1)
+		   (not (protected ( aref (squares-array (game-squares game)) x y)))
+		   (eq (digit (aref (squares-array (game-squares game)) x y)) 0))
 	      (return-from fin (values x y (car list))))
       
     
@@ -52,3 +55,12 @@
      (unless (endp list)
        list)
 ))
+
+(defun test (game)
+  (loop while (not (eq (strategy game) NIL)) do
+       (multiple-value-bind (x y value) (strategy game)
+	 (change-digit game x y value))
+       (setf (
+       
+  (print-grid game)))
+

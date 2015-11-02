@@ -1,3 +1,4 @@
+
 ;;===========================================
 ;;==           Implémentation              ==
 ;;==             AFFICHAGE                 ==
@@ -101,19 +102,19 @@
 
 ;; Affiche les chiffres des lignes, ainsi que la grille
 (defun print-line (squares)
-  (loop for y from 0 to (1- *size*) do
+  (loop for x from 0 to (1- *size*) do
     (if (< 9 *size*) 
-	(format T "| ~2d |" (1+ y))
-	(format T "| ~d |" (1+ y)))
-    (loop for x from 0 to (1- *size*) do
+	(format T "| ~2d |" (1+ x))
+	(format T "| ~d |" (1+ x)))
+    (loop for y from 0 to (1- *size*) do
       (if (< 9 *size*) 
 	  (format T " ~2d " (digit (aref (squares-array squares) x y)))
 	  (format T " ~d " (digit (aref (squares-array squares) x y))))
-      (when (eq (mod (1+ x) *sqrt-size*) 0)
+      (when (eq (mod (1+ y) *sqrt-size*) 0)
 	(princ "|")))
     (terpri)
-    (when (and (eq (mod (1+ y) *sqrt-size*) 0)
-	       (not (eq y (1- *size*))))
+    (when (and (eq (mod (1+ x) *sqrt-size*) 0)
+	       (not (eq x (1- *size*))))
       ;; Affiche les barres séparant les zones
       (print-bar "─" "├" "┼" "┼" "┤")
       ))
