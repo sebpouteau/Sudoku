@@ -7,15 +7,17 @@
 (in-package :sudoku)
 
 (defmethod strategy (game)
-  (init-game game)
-  // while
-  
-(loop for y from 0 to (1- *size*) do
-     (loop for x from 0 to (1- *size*) do
-	  
-	  (if (= 1 (len (get-possibility game x y)))
-	      (change-digit game x y (car (get-possibility game x y)))
-	      (loop for value in (get-possibility game x y) do
+(block fin
+  ;; Test si il existe un carré n'ayant qu'une possibilité
+  (loop for y from 0 to (1- *size*) do
+       (loop for x from 0 to (1- *size*) do
+	    (when (not (protected ( aref (squares-array (game-squares game)) x y)))
+	      (when (= 1 (length (get-possibility game x y)))
+		(return-from fin (values x y (car (get-possibility game x y))))))))
+  ;; test plus approfondit
+  (loop for y from 0 to (1- *size*) do
+       (loop for x from 0 to (1- *size*) do
+		 
 	       
 
 ))))
