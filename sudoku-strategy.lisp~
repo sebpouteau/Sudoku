@@ -19,6 +19,11 @@
 		   (eq (digit (aref (squares-array (game-squares game)) x y)) 0))
 	  (return-from fin (values x y (car (get-possibility game x y)))))))
     
+    ;; test plus approfondit
+    ;(loop for y from 0 to (1- *size*) do
+       ;(loop for x from 0 to (1- *size*) do
+	 ;(when (not (protected ( aref (squares-array (game-squares game)) x y)))
+
     (loop for y from 0 to (1- *size*) do
       (loop for x from 0 to (1- *size*) do
 	(let ((list (verifier-subsquare game x y )))
@@ -30,25 +35,14 @@
     (loop for y from 0 to (1- *size*) do
       (loop for x from 0 to (1- *size*) do
 	(let ((listL (verifier-line game x y 'line))
-	      (listC (verifier-line game x y 'column)))3
+	      (listC (verifier-line game x y 'column)))
 	  (when (and (not (protected ( aref (squares-array (game-squares game)) x y)))
 		     (eq (digit (aref (squares-array (game-squares game)) x y)) 0))
 	    (when (= (length listL) 1)
 	      (return-from fin (values x y (car listL))))
 	    (when (= (length listC) 1)
 	      (return-from fin (values x y (car listC))))	    
-	    ))))
-    (loop for y from 0 to (1- *size*) do
-      (loop for x from 0 to (1- *size*) do
-	(when (and (not (protected ( aref (squares-array (game-squares game)) x y)))
-		   (not (eq (get-possibility game x y) NIL))
-		   (eq (digit (aref (squares-array (game-squares game)) x y)) 0))
-	  (print "profondeur")
-	  (loop for v in (get-possibility game x y) do
-	    (if (etude-profondeur game x y v)
-		(return-from fin (values x y v))
-		
-		)))))))
+    ))))))
 
  
 (defun verifier-subsquare(game coorX coorY)
@@ -96,48 +90,12 @@
 	    list))))
 
       
-(defun jeu (game)
-  (block fin
-    (loop while (and (not (eq (strategy game) NIL))
-		     (not (game-over game))) do
-      (multiple-value-bind (x y value) (strategy game)
-	(change-digit game x y value))
-      (print-grid game)
-      )))
 
 (defun test (game)
- 
-    (loop while (not (eq (strategy game) NIL)) do
-      (multiple-value-bind (x y value) (strategy game)
-	(change-digit game x y value))       
-	  )
-  (game-over game :print T))
+  (loop while (not (eq (strategy game) NIL)) do
+       (multiple-value-bind (x y value) (strategy game)
+	 (change-digit game x y value))
+       
+       
+  (print-grid game)))
 
-(defun etude-profondeur(game x y value)
-  (let ((oldSquares (copy-squares (game-squares game)))
-	(bool NIL))
-    (change-digit game x y value)
-    (update-possibility-all-square (game-squares game))
-    
-    (when (eq (test game) 'win)
-      (setf bool T))
-    
-    
-					;     (when (eq (test game) NIL)
-					;	(loop for y from 0 to (1- *size*) do
-					;	  (loop for x from 0 to (1- *size*) do
-					;	    (when (and (not (protected ( aref (squares-array (game-squares game)) x y)))
-					;		       (not (eq (get-possibility game x y) NIL))
-					;		       (eq (digit (aref (squares-array (game-squares game)) x y)) 0))
-					;	      (print "prof2")
-					;	      (loop for v in (get-possibility game x y) do
-					;		(when (etude-profondeur game x y v)
-					;		    (setf (game-squares game) oldSquares)
-					;		    (return-from fin T)))))))
-    (setf (game-squares game) oldSquares)
-    bool
-    )
-  )
-
-
-  
