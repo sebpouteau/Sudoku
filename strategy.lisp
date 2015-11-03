@@ -373,7 +373,7 @@
 ;;===========================================
 
 
-(defmethod strategy (game)
+(defun strat (game)
   (update-possibility-all-square (game-squares game))
   (block fin
     (loop for fun in '(one-possibility-square one-possibility-in-subsquare one-possibility-in-line depth-study-possibility) do
@@ -472,17 +472,17 @@
       
 (defun jeu (game)
   (block fin
-    (loop while (and (not (eq (strategy game) NIL))
+    (loop while (and (not (eq (strat game) NIL))
 		     (not (game-over game))) do
-      (multiple-value-bind (x y value) (strategy game)
+      (multiple-value-bind (x y value) (strat game)
 	(change-digit game x y value))
       (print-grid game)
       )))
 
 (defun play-verification-game-over (game)
  
-    (loop while (not (eq (strategy game) NIL)) do
-      (multiple-value-bind (x y value) (strategy game)
+    (loop while (not (eq (strat game) NIL)) do
+      (multiple-value-bind (x y value) (strat game)
 	(change-digit game x y value))       
 	  )
   (game-over game))
@@ -514,4 +514,4 @@
   )
 
 (defun main-standalone ()
-  (strategy *game*))
+  (strat *game*))
