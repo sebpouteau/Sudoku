@@ -14,8 +14,7 @@
 
 (defun sudoku (game)
   (loop while (not (game-over game)) do 
-       (game-do game)
-       (red )
+       (game-do game))
   (print-grid *game*)
   (game-over game :print T )
   )
@@ -207,7 +206,7 @@
 ;; Affiche "You Win !"
 (defun print-win ()
   (princ 
-"                         ═
+"                        ═
  ╗  ╔ ╔══╗ ╗  ╔     ╗  ╔ ╔ ╔╗  ╗   ║
  ╚══╣ ║  ║ ║  ║     ║╔╗║ ║ ║ ╚ ║   ║
   ══╝ ╚══╝ ╚══╝     ╚╝╚╝ ╚ ╚  ╚╝   ═

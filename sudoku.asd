@@ -16,4 +16,5 @@
    (:file "sudoku-generic")
    (:file "sudoku-method")
    (:file "sudoku-affichage")
+   (:file "sudoku-strategy")
    ))
