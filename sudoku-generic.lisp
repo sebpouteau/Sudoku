@@ -128,7 +128,7 @@
   (:documentation "création instance game avec initial-grid etant une grille 
                     (lien de la grille passé en parametre)"))
 
-(defgeneric game-over (game)
+(defgeneric game-over (game &key print)
   (:documentation "if the game is over (either won or lost"))
 
 (defgeneric init-game (game)

@@ -209,7 +209,7 @@
 
 
 
-(defun game-over(game &key (print nil))
+(defmethod game-over(game &key (print nil))
   (block fin
       (loop for y from 0 to (1- *size*) do
 	(loop for x from 0 to (1- *size*) do
