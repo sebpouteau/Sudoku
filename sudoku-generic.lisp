@@ -32,12 +32,6 @@
    (y :initarg :y :reader y-coor :type integer))
   (:documentation "class for coordinates in the squares grid"))
 
-(defgeneric x-coor (coor)
-  (:documentation "x slot of coor"))
-
-(defgeneric y-coor (coor)
-  (:documentation "y slot of coor"))
-
 (defgeneric make-coor (x y)
   (:documentation "instance of a coor [x,y]"))
 
@@ -61,21 +55,6 @@
 (defgeneric make-square (coor &optional digit)
   (:documentation "creates a square containing coor and digit"))
 
-(defgeneric coor-square (squares coor)
-  (:documentation "the square at COOR in SQUARES"))
-
-(defgeneric possible-digits (square)
-  (:documentation 
-   "list of possible digits remaining in SQUARE"))
-
-(defgeneric digit (square)
-  (:documentation 
-   "assigned digit of square (0 if unassigned)"))
-
-(defgeneric protected (square) 
-  (:documentation 
-   "T if square was originally filled in the grid"))
-
 (defgeneric assigned-p (square)
   (:documentation "T if the digit slot a striclty positive and inferior to 10"))
 
@@ -97,14 +76,9 @@
 (defgeneric make-squares()
   (:documentation "return array two dimensional (size,  size) "))
 
-(defgeneric to-fill (squares)
-  (:documentation "return number of free case"))
 
 (defgeneric make-squares-array (size)
   (:documentation "return array two dimensional (size,  size) "))
-
-(defgeneric squares-array (size)
-  (:documentation "reader squares-array "))
 
 (defgeneric grid-to-square (squares)
   (:documentation "attribue the right coordinates to square-array"))
@@ -150,15 +124,9 @@
    (initial-grid :reader initial-grid :initarg :initial-grid))
   (:documentation "class for game instances"))
 
-(defgeneric make-grid (grid)
+(defgeneric make-game (grid)
   (:documentation "création instance game avec initial-grid etant une grille 
                     (lien de la grille passé en parametre)"))
-
-(defgeneric game-squares (game)
-  (:documentation "the squares of GAME"))
-
-(defgeneric initial-grid (game)
-  (:documentation "the initial grid of GAME"))
 
 (defgeneric game-over (game)
   (:documentation "if the game is over (either won or lost"))
@@ -178,3 +146,4 @@
 
 (defgeneric print-grid (squares)
  (:documentation "affiche la grille du jeu"))
+

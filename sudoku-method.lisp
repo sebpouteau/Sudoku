@@ -89,9 +89,11 @@
 
 
 (defmethod update-possibility (squares x y list)
-  (setf (possible-digits (aref (squares-array squares) x y))
-	(remove-sublist list (get-possibility squares x y))))
-
+  (if (eq (digit (aref (squares-array squares) x y)) 0) 
+      (setf (possible-digits (aref (squares-array squares) x y))
+	    (remove-sublist list (get-possibility squares x y)))
+      (setf (possible-digits (aref (squares-array squares) x y))
+	    NIL)))
 
 (defmethod remove-sublist(list1 list2)
   (if (endp list1)
@@ -104,8 +106,8 @@
   (assert (or (eq sens 'line) (eq sens 'column)))
   (labels ((line-column (x y)
 	     (if (eq sens 'line)
-		 (list x y)
-		 (list y x))))
+		 (list y x)
+		 (list x y))))
     (let ((list '())
 	  (array (squares-array squares)))
       (loop for indiceMovible from 0 to (1- *size*) do    
@@ -184,6 +186,7 @@
 
 			   
 (defmethod init-game (game)
+  (setf (to-fill (game-squares game)) (* *size* *size*))
   (loop for x from 0 to (1- *size*) do
        (loop for y from 0 to (1- *size*) do
 	      (setf (digit (aref (squares-array (game-squares game))
@@ -206,19 +209,21 @@
 
 
 
-(defmethod game-over(game)
-  (let ((bool NIL))
-    (loop for y from 0 to (1- *size*) do
-	 (loop for x from 0 to (1- *size*) do
-	      (let ((square (aref (squares-array (game-squares game))
-				  y x)))
-		(cond ((and (= (digit square) 0) (eq (possible-digits square) NIL))
-		       (print-game-over)
-		       (setf bool t))
-		      
-		      ((= (to-fill (game-squares game)) 0)
-		       (print-win)
-		       (setf bool t)))
-		)))
-    bool))
-
+(defun game-over(game &key (print nil))
+  (block fin
+      (loop for y from 0 to (1- *size*) do
+	(loop for x from 0 to (1- *size*) do
+	  (let ((square (aref (squares-array (game-squares game))
+			      y x)))
+	    (cond ((and (= (digit square) 0) (eq (possible-digits square) NIL))
+		   (when (eq print T)
+		     (print-game-over))
+		   (return-from fin 'lose))
+		   
+		  
+		  ((= (to-fill (game-squares game)) 0)
+		   (when (eq print T)
+		     (print-win))
+		   (return-from fin 'win))
+	    ))))))
+  
