@@ -129,7 +129,7 @@
                     (lien de la grille passé en parametre)"))
 
 (defgeneric game-over (game &key print)
-  (:documentation "if the game is over (either won or lost"))
+  (:documentation "if the game qis over (either won or lost"))
 
 (defgeneric init-game (game)
   (:documentation "initializes GAME with its initial-grid"))
@@ -145,5 +145,5 @@
   (:documentation "retourne la liste des possibilitées du carré (x,y)"))
 
 (defgeneric print-grid (squares)
- (:documentation "affiche la grille du jeu"))
+  (:documentation "affiche la grille du jeu"))
 

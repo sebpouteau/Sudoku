@@ -211,11 +211,12 @@
 
 (defmethod game-over(game &key (print nil))
   (block fin
-      (loop for y from 0 to (1- *size*) do
-	(loop for x from 0 to (1- *size*) do
+      (loop for x from 0 to (1- *size*) do
+	(loop for y from 0 to (1- *size*) do
 	  (let ((square (aref (squares-array (game-squares game))
-			      y x)))
-	    (cond ((and (= (digit square) 0) (eq (possible-digits square) NIL))
+			       x y)))
+	    (cond ((and (= (digit square) 0)
+			(eq (possible-digits square) NIL))
 		   (when (eq print T)
 		     (print-game-over))
 		   (return-from fin 'lose))
