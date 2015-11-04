@@ -15,7 +15,6 @@
 (defun sudoku (game)
   (loop while (not (game-over game)) do 
        (game-do game)
-       (red )
   (print-grid *game*)
   (game-over game :print T )
   )
