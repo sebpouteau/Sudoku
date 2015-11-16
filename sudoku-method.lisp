@@ -223,18 +223,7 @@
 
 (defmethod game-with-new-grid(&optional strategy)
   (declare (ignore strategy))
-  (let (( game (make-game "Grids/1.sudoku")))
+  (let ((game (make-game "Grids/1.sudoku")))
     (init-game game)
     game)
-  )
-
-
-(defun main()
-  (handler-case
-      (let ((game (make-game "Grids/1.sudoku")))
-	(init-game game)
-	(sudoku game))
-    (T (c)
-      (format T "~%~a~%" c)
-      (sb-ext:exit)))
   )

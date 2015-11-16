@@ -141,6 +141,9 @@
 ;; ==     Affichage     ==
 ;; =======================
 
+(defgeneric main ()
+  (:documentation "Jeu du sudoku complet (demande la grille, et lance le jeu)"))
+
 (defgeneric sudoku (game)
   (:documentation "Lance le jeu passé en paramètre"))
 

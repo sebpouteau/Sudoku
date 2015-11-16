@@ -15,6 +15,20 @@
 (defvar *code-ascii* 65)
 
 
+(defmethod main ()
+  (princ "Saisir la grille de jeu (Exemple : Grids/1.sudoku) : ")
+  (force-output)
+  (handler-case
+      (let* ((grille (read-line))
+	     (game (make-game grille)))
+	(init-game game)
+	(sudoku game))
+    (T (c)
+      (format T "~%~a~%" c)
+      (sb-ext:exit)))
+  )
+
+
 (defmethod sudoku (game)
   (loop while (not (game-over game)) do
        (launcher-sudoku game))
@@ -35,7 +49,9 @@
 	 (x (1- *line*))
 	 (y (- *column* 65)))
     (if (protected (aref (squares-array squares) x y))
-	(print "Impossible de changer cette case : valeur initial")
+	(progn
+	  (print "Impossible de changer cette case : valeur initial")
+	  (terpri))
 	(change-digit squares x y *value-digit*)))
   )
 

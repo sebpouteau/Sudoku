@@ -35,12 +35,7 @@ Compiler le Projet et créer une grille remplie :
      -> remplacer "/home/jimgouraud/sudoku" par votre répertoire contenant le sudoku
  - (asdf:load-system "sudoku")
  - Ctr-C Alt-p SUDOKU
- 
- - (defparameter *grid* (make-instance 'squares))
- - (grid-to-square *grid*)
-
- - (defparameter *game* (make-game "Grids/1.sudoku"))
- - (init-game *game*)
+ - (main)
 
 ================================================
 ==    Générer le fichier core (executable)    ==
