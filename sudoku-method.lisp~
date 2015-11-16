@@ -35,9 +35,6 @@
     s))
 
 
-(defmethod coor-square ( squares coor)
-  (aref (squares-array squares) (x-coor coor) (y-coor coor)))
-
 ;; =====================
 ;; ==     Grille      ==
 ;; =====================
@@ -63,7 +60,7 @@
   (setf (digit (aref (squares-array squares) x y)) value)
   (if ( = (digit (aref (squares-array squares) x y)) 0)
       (update-possibility-all-square squares)
-      (when 
+      (when (T)
 	(update-possibility-line squares y 'line)
 	(update-possibility-line squares x 'column)
 	(update-possibility-subsquares squares x y)
@@ -96,22 +93,26 @@
       (remove-sublist (cdr list1) (remove (car list1) list2))))
 
 
-(defmethod update-possibility-line (squares indiceStatic sens)
+(defmethod update-possibility-line (squares indiceStatic &optional (sens 'line))
   (assert (or (eq sens 'line) (eq sens 'column)))
-  (let ((list '())
-	(array (squares-array squares)))
-    (loop for indiceMovible from 0 to (1- *size*) do    
-      ;; pour parcourir les colonnes c'est le x qui est statique 
-      ;; pour parcourir les lignes c'est le y qui est statique
-      (let* ((coor (line-column sens indiceMovible indiceStatic))
-	     (value (digit(aref array (car coor) (cadr coor))))
-	     )
-	(if (not (zerop value))
-	    (setf list (cons value list)))))   
-    (loop for indiceMovible from 0 to (1- *size*) do    
-      (let ((coor (line-column sens indiceMovible indiceStatic)))
-	(update-possibility squares (car coor) (cadr coor) list)))))
-
+  (labels ((line-column (x y)
+	     (if (eq sens 'line)
+		 (list y x)
+		 (list x y))))
+    (let ((list '())
+	  (array (squares-array squares)))
+      (loop for indiceMovible from 0 to (1- *size*) do    
+	 ;; pour parcourir les colonnes c'est le x qui est statique 
+	 ;; pour parcourir les lignes c'est le y qui est statique
+	   (let* ((coor (line-column indiceMovible indiceStatic))
+		  (value (digit(aref array (car coor) (cadr coor))))
+		  )
+	     (if (not (zerop value))
+		 (setf list (cons value list)))))   
+	    (loop for indiceMovible from 0 to (1- *size*) do    
+	      (let ((coor (line-column indiceMovible indiceStatic)))
+	        (update-possibility squares (car coor) (cadr coor) list))))))
+      
 
  
 (defmethod update-possibility-subsquares (squares x y)
@@ -153,14 +154,18 @@
 					   ))))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun list-to-2d-array (list)
+  (make-array (list (length list)
+                    (length (first list)))
+              :initial-contents list))
+
 (defmethod make-game (grid)
-  (let ((game  (make-instance 'game
-			      :game-squares (make-squares)
-			      :initial-grid (list-to-2d-array
-					     (read (open grid))))))
-    (init-game game)
-    game))
-	
+  (make-instance 'game
+		 :game-squares (make-squares)
+		 :initial-grid (list-to-2d-array
+				(read (open grid)))))
+
 			   
 (defmethod init-game (game)
   (setf (to-fill (game-squares game)) (* *size* *size*))
@@ -189,6 +194,9 @@
   (possible-digits (aref (squares-array square) x y)))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 
 (defmethod game-over(game)
       (loop for x from 0 to (1- *size*) do
@@ -202,15 +210,10 @@
 		   (return-from game-over 'win))
 	    )))))
 
-
-
-(defmethod game-with-new-grid(&optional strategy)
-  (declare (ignore strategy))
-  (let (( game (make-game "Grids/1.sudoku")))
-    (init-game game)
-    game))
-
-
+(defun print-end(end)
+  (if (eq end 'win)
+      (print-win)
+      (print-game-over)))
 
 (defun main()
   (handler-case
@@ -220,3 +223,11 @@
     (T (c)
       (format T "~%~a~%" c)
       (sb-ext:exit))))
+
+(defun game-with-new-grid()
+  (let (( game (make-game "Grids/1.sudoku")))
+    (init-game game)
+    game))
+
+(defun init-sudoku ()
+  )

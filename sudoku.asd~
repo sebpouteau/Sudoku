@@ -13,7 +13,6 @@
   :components
   (
    (:file "package")
-   (:file "sudoku-static-method")
    (:file "sudoku-generic")
    (:file "sudoku-method")
    (:file "sudoku-affichage")

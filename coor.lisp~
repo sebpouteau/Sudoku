@@ -4,6 +4,11 @@
 (defvar *nb-squares* (* *size* *size*))
 (defvar *list-alpha* '(a b c d e f g h i j k l m n o p q r s t u v w x y))
 
+(defgeneric x-coor (coor)
+  (:documentation "x slot of coor"))
+
+(defgeneric y-coor (coor)
+  (:documentation "y slot of coor"))
 
 (define-condition quit-interactive (condition)
   ())
@@ -16,6 +21,11 @@
 (defmethod print-object ((coor coor) stream)
   (format stream "[~A,~A]" (x-coor coor) (y-coor coor)))
 
+(defgeneric make-coor (x y)
+  (:documentation "instance of a coor [x,y]"))
+
+(defmethod make-coor ((x integer) (y integer))
+  (make-instance 'coor :x x :y y))
 
 (defvar *all-coors*
   (loop for i from 0 below *size*
