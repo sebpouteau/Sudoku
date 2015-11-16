@@ -32,8 +32,8 @@
 
   ;; Change la valeur de la case
   (let* ((squares (game-squares game))
-	 (x 1- *line*)
-	 (y 1 *column* 65))
+	 (x (1- *line*))
+	 (y (- *column* 65)))
     (if (protected (aref (squares-array squares) x y))
 	(print "Impossible de changer cette case : valeur initial")
 	(change-digit squares x y *value-digit*)))

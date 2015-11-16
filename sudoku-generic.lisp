@@ -163,13 +163,13 @@
   (:documentation "Affiche les chiffres des lignes, ainsi que la grille"))
 
 (defgeneric print-title ()
-  (:documentation "Affiche le titre")
+  (:documentation "Affiche le titre"))
 
 (defgeneric print-game-over ()
   (:documentation "Affiche 'Game Over !' "))
  
 (defgeneric print-win ()
-  (:documentation "Affiche 'You Win !' ")
+  (:documentation "Affiche 'You Win !' "))
 
 (defgeneric print-end (game)
   (:documentation "Affiche le message de 'win' ou de 'game over', selon la game passée en paramètre"))
@@ -184,4 +184,4 @@
   (:documentation "Demande la ligne à l'utilisateur"))
 
 (defgeneric ask-digit ()
-  (:documentation "Demande la valeur de la case à l'utilisateur")
+  (:documentation "Demande la valeur de la case à l'utilisateur"))
