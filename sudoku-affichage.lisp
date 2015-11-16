@@ -7,20 +7,27 @@
 
 (in-package :sudoku)
 
+
+;; Définition des variables locales
 (defvar *line*)
 (defvar *column*)
 (defvar *value-digit*)
 (defvar *code-ascii* 65)
 
+
 (defun sudoku (game)
+  "Lance le jeu passé en paramètre"
+
   (loop while (not (game-over game)) do
-    (launcher-sudoku game))
+       (launcher-sudoku game))
   (print-grid *game*)
-  (game-over game :print T )
+  (game-over game :print T)
   )
 
-;; Affiche le jeu Sudoku
+
 (defun launcher-sudoku (game)
+  "Affiche le jeu Sudoku"
+
   ;; Affiche la grille
   (print-grid game)
 
@@ -35,13 +42,16 @@
   )
 
 
-;; Affiche la grille du jeu
 (defmethod print-grid ((squares game))
-  (print-grid (game-squares squares)))
+  "Affiche la grille du jeu passé en paramètre"
+
+  (print-grid (game-squares squares))
+  )
 
 
-;; Affiche le grille passé en paramètre
 (defmethod print-grid ((squares squares))
+  "Affiche la grille passée en paramètre"
+
   ;; Affiche le titre
   (print-title)
 
@@ -51,7 +61,7 @@
   ;; Affiche les lettres des colonnes
   (print-column)
 
-  ;; Affiche la barre en dessous des lettres
+  ;; Affiche la barre en-dessous des lettres
   (print-bar "─" "┌" "┼" "┼" "┤")
 
   ;; Affiche les chiffres des lignes, ainsi que la grille
@@ -62,18 +72,9 @@
   )
 
 
-;; Affiche le titre
-(defun print-title ()
-  (princ"
- ╔═══╗ ╔   ╗ ╔══╗  ╔═══╗ ╔ ╔ ╔   ╗
- ╚═══╗ ║   ║ ║   ║ ║   ║ ╠╣  ║   ║
- ╚═══╝ ╚═══╝ ╚══╝  ╚═══╝ ╚ ╚ ╚═══╝
-
-"))
-
-
-;; Affiche une barre en fonction *size* et des paramètres rentrés
 (defun print-bar (espacement debut debut2 milieu fin)
+  "Affiche une barre en fonction de *size* et des paramètres rentrés"
+
   (princ debut)
   (loop for cpt from 0 to 2 do
        (princ espacement))
@@ -88,15 +89,17 @@
 		  (not (eq cpt *size*)))
 	 (princ milieu)))
   (princ fin)
-  (terpri))
+  (terpri)
+  )
 
 
-;; Affiche les lettres des colonnes
 (defun print-column()
+  "Affiche les lettres des colonnes"
+
   (loop for cpt from 0 to 3 do
        (princ " "))
   (when (< 9 *size*)
-    (princ " ")) ;; permet l'extensibilité de la grille
+    (princ " "))
   (princ "| ")
   (loop for cpt from 0 to (1- *size*) do
        (when (< 9 *size*)
@@ -109,8 +112,9 @@
   )
 
 
-;; Affiche les chiffres des lignes, ainsi que la grille
 (defun print-line (squares)
+  "Affiche les chiffres des lignes, ainsi que la grille"
+
   (loop for x from 0 to (1- *size*) do
        (if (< 9 *size*) 
 	   (format T "| ~2d |" (1+ x))
@@ -134,8 +138,10 @@
 	 ))
   )
 
-;; Affiche la demande la ligne, la colonne et la valeur de la case à modifier
+
 (defun ask-case ()
+  "Demande la ligne, la colonne et la valeur de la case à modifier"
+
   ;; Demande la colonne
   (ask-column)
 
@@ -146,15 +152,18 @@
   (ask-digit)
   )
 
-;; Demande la colonne à l'utilisateur
+
+
 (defun ask-column ()
+  "Demande la colonne à l'utilisateur"
+
   (princ "Enter the column letter: ")
-  (force-output)
+  (force-output) ;; force la sortie (utile pour jouer dans le terminal)
   (setf *column* (read-line))
   (loop while (or (not (eq (length *column*) 1)) 
 		  (not (<= 65 (char-code (char *column* 0)) (+ 65 *size* -1)))) do
-		    (format T "You need to enter a letter between A and ~d : " (code-char (+ *code-ascii* *size* -1)))
-		    (force-output)
+       (format T "You need to enter a letter between A and ~d : " (code-char (+ *code-ascii* *size* -1)))
+       (force-output)
        (setf *column* (read-line)))
   ;; Transforme la valeur de *column* en valeur numérique (utilisable plus facilement)
   (setf *column* (char-code (char (string *column*) 0)))
@@ -163,16 +172,17 @@
   )
 
 
-;; Demande la ligne à l'utilisateur
 (defun ask-line ()
+  "Demande la ligne à l'utilisateur"
+
   (princ "Enter the line number : ")
-  (force-output)
+  (force-output) ;; force la sortie (utile pour jouer dans le terminal)
   (setf *line* (read-line))
   (loop while (or (eq (length *line*) 0)
 		  (not (numberp (parse-integer (string *line*) :junk-allowed t)))
 		  (not (<= 1 (parse-integer (string *line*) :junk-allowed t) *size*))) do
-		    (format T "You need to enter a number between 1 and ~d : " *size*)
-		    (force-output)
+       (format T "You need to enter a number between 1 and ~d : " *size*)
+       (force-output)
        (setf *line* (read-line)))
   ;; Transforme la valeur de *line* en valeur numérique (utilisable plus facilement)
   (setf *line* (parse-integer *line*))
@@ -181,17 +191,18 @@
   )
 
 
-;; Demande la valeur de la case à l'utilisateur
 (defun ask-digit ()
+  "Demande la valeur de la case à l'utilisateur"
+
   (princ "Enter the digit: ")
-  (force-output)
+  (force-output) ;; force la sortie (utile pour jouer dans le terminal)
   (setf *value-digit* (read-line))
   (loop while (or (eq (length *value-digit*) 0)
 		  (not (numberp (parse-integer (string *value-digit*) :junk-allowed t)))
 		  (not (<= 1 (parse-integer (string *value-digit*) :junk-allowed t) *size*))) do
-		    (format T "You need to enter a number between 1 and ~d : " *size*)
-		    (force-output)
-		    (setf *value-digit* (read-line)))
+       (format T "You need to enter a number between 1 and ~d : " *size*)
+       (force-output)
+       (setf *value-digit* (read-line)))
   ;; Transforme la valeur de *value-digit* en valeur numérique (utilisable plus facilement)
   (setf *value-digit* (parse-integer *value-digit*))
   ;; Affiche le résultat
@@ -199,9 +210,20 @@
   )
 
 
+(defun print-title ()
+  "Affiche le titre"
 
-;; Affiche "Game Over !"
+  (princ"
+ ╔═══╗ ╔   ╗ ╔══╗  ╔═══╗ ╔ ╔ ╔   ╗
+ ╚═══╗ ║   ║ ║   ║ ║   ║ ╠╣  ║   ║
+ ╚═══╝ ╚═══╝ ╚══╝  ╚═══╝ ╚ ╚ ╚═══╝
+
+"))
+
+
 (defun print-game-over ()
+  "Affiche 'Game Over !' "
+
   (princ "
  ╔══╗ ╔══╗ ╔╗╔╗ ╔═╗     ╔══╗ ╗  ╔ ╔═╗ ╔═╗   ║
  ║ ═╗ ╠══╣ ║╚╝║ ╠╣      ║  ║ ║  ║ ╠╣  ╠╣    ║
@@ -209,8 +231,10 @@
 
 "))
 
-;; Affiche "You Win !"
+ 
 (defun print-win ()
+  "Affiche 'You Win !' "
+  
   (princ 
 "                         ═
  ╗  ╔ ╔══╗ ╗  ╔     ╗  ╔ ╔ ╔╗  ╗   ║
