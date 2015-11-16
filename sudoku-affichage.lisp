@@ -35,17 +35,19 @@
   (ask-case)
 
   ;; Change la valeur de la case
-  (change-digit (game-squares game)
-  		(1- *line*)
-  		(- *column* 65) 
-  		*value-digit*)
+  (let* ((squares (game-squares game))
+	 (x 1- *line*)
+	 (y 1 *column* 65))
+    (if (protected (aref (squares-array squares) x y))
+	(print "Impossible de changer cette case : valeur initial")
+	(change-digit squares x y *value-digit*)))
   )
 
 
-(defmethod print-grid ((squares game))
+(defmethod print-grid ((game game))
   "Affiche la grille du jeu passé en paramètre"
 
-  (print-grid (game-squares squares))
+  (print-grid (game-squares game))
   )
 
 

@@ -149,3 +149,4 @@
 (defgeneric print-grid (squares)
   (:documentation "affiche la grille du jeu"))
 
+
