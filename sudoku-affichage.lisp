@@ -15,19 +15,15 @@
 (defvar *code-ascii* 65)
 
 
-(defun sudoku (game)
-  "Lance le jeu passé en paramètre"
-
+(defmethod sudoku (game)
   (loop while (not (game-over game)) do
        (launcher-sudoku game))
   (print-grid *game*)
-  (game-over game :print T)
+  (print-end (game-over game))
   )
 
 
-(defun launcher-sudoku (game)
-  "Affiche le jeu Sudoku"
-
+(defmethod launcher-sudoku (game)
   ;; Affiche la grille
   (print-grid game)
 
@@ -45,15 +41,11 @@
 
 
 (defmethod print-grid ((game game))
-  "Affiche la grille du jeu passé en paramètre"
-
   (print-grid (game-squares game))
   )
 
 
 (defmethod print-grid ((squares squares))
-  "Affiche la grille passée en paramètre"
-
   ;; Affiche le titre
   (print-title)
 
@@ -74,9 +66,7 @@
   )
 
 
-(defun print-bar (espacement debut debut2 milieu fin)
-  "Affiche une barre en fonction de *size* et des paramètres rentrés"
-
+(defmethod print-bar (espacement debut debut2 milieu fin)
   (princ debut)
   (loop for cpt from 0 to 2 do
        (princ espacement))
@@ -95,9 +85,7 @@
   )
 
 
-(defun print-column()
-  "Affiche les lettres des colonnes"
-
+(defmethod print-column()
   (loop for cpt from 0 to 3 do
        (princ " "))
   (when (< 9 *size*)
@@ -114,9 +102,7 @@
   )
 
 
-(defun print-line (squares)
-  "Affiche les chiffres des lignes, ainsi que la grille"
-
+(defmethod print-line (squares)
   (loop for x from 0 to (1- *size*) do
        (if (< 9 *size*) 
 	   (format T "| ~2d |" (1+ x))
@@ -141,9 +127,42 @@
   )
 
 
-(defun ask-case ()
-  "Demande la ligne, la colonne et la valeur de la case à modifier"
+(defmethod print-title ()
+  (princ"
+ ╔═══╗ ╔   ╗ ╔══╗  ╔═══╗ ╔ ╔ ╔   ╗
+ ╚═══╗ ║   ║ ║   ║ ║   ║ ╠╣  ║   ║
+ ╚═══╝ ╚═══╝ ╚══╝  ╚═══╝ ╚ ╚ ╚═══╝
 
+"))
+
+
+(defmethod print-game-over ()
+  (princ "
+ ╔══╗ ╔══╗ ╔╗╔╗ ╔═╗     ╔══╗ ╗  ╔ ╔═╗ ╔═╗   ║
+ ║ ═╗ ╠══╣ ║╚╝║ ╠╣      ║  ║ ║  ║ ╠╣  ╠╣    ║
+ ╚══╝ ╚  ╝ ╝  ╚ ╚═╝     ╚══╝  ╚╝  ╚═╝ ╚ ╚   ═
+
+"))
+
+ 
+(defmethod print-win ()
+  (princ 
+"                         ═
+ ╗  ╔ ╔══╗ ╗  ╔     ╗  ╔ ╔ ╔╗  ╗   ║
+ ╚══╣ ║  ║ ║  ║     ║╔╗║ ║ ║ ╚ ║   ║
+  ══╝ ╚══╝ ╚══╝     ╚╝╚╝ ╚ ╚  ╚╝   ═
+
+"))
+
+
+(defmethod print-end (end)
+  (if (eq end 'win)
+      (print-win)
+      (print-game-over))
+  )
+
+
+(defmethod ask-case ()
   ;; Demande la colonne
   (ask-column)
 
@@ -155,10 +174,7 @@
   )
 
 
-
-(defun ask-column ()
-  "Demande la colonne à l'utilisateur"
-
+(defmethod ask-column ()
   (princ "Enter the column letter: ")
   (force-output) ;; force la sortie (utile pour jouer dans le terminal)
   (setf *column* (read-line))
@@ -174,9 +190,7 @@
   )
 
 
-(defun ask-line ()
-  "Demande la ligne à l'utilisateur"
-
+(defmethod ask-line ()
   (princ "Enter the line number : ")
   (force-output) ;; force la sortie (utile pour jouer dans le terminal)
   (setf *line* (read-line))
@@ -193,9 +207,7 @@
   )
 
 
-(defun ask-digit ()
-  "Demande la valeur de la case à l'utilisateur"
-
+(defmethod ask-digit ()
   (princ "Enter the digit: ")
   (force-output) ;; force la sortie (utile pour jouer dans le terminal)
   (setf *value-digit* (read-line))
@@ -211,36 +223,3 @@
   (format T "  value-digit : ~d ~%~%" *value-digit*)
   )
 
-
-(defun print-title ()
-  "Affiche le titre"
-
-  (princ"
- ╔═══╗ ╔   ╗ ╔══╗  ╔═══╗ ╔ ╔ ╔   ╗
- ╚═══╗ ║   ║ ║   ║ ║   ║ ╠╣  ║   ║
- ╚═══╝ ╚═══╝ ╚══╝  ╚═══╝ ╚ ╚ ╚═══╝
-
-"))
-
-
-(defun print-game-over ()
-  "Affiche 'Game Over !' "
-
-  (princ "
- ╔══╗ ╔══╗ ╔╗╔╗ ╔═╗     ╔══╗ ╗  ╔ ╔═╗ ╔═╗   ║
- ║ ═╗ ╠══╣ ║╚╝║ ╠╣      ║  ║ ║  ║ ╠╣  ╠╣    ║
- ╚══╝ ╚  ╝ ╝  ╚ ╚═╝     ╚══╝  ╚╝  ╚═╝ ╚ ╚   ═
-
-"))
-
- 
-(defun print-win ()
-  "Affiche 'You Win !' "
-  
-  (princ 
-"                         ═
- ╗  ╔ ╔══╗ ╗  ╔     ╗  ╔ ╔ ╔╗  ╗   ║
- ╚══╣ ║  ║ ║  ║     ║╔╗║ ║ ║ ╚ ║   ║
-  ══╝ ╚══╝ ╚══╝     ╚╝╚╝ ╚ ╚  ╚╝   ═
-
-"))
