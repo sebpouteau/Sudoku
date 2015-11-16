@@ -41,3 +41,14 @@ Compiler le Projet et créer une grille remplie :
 
  - (defparameter *game* (make-game "Grids/1.sudoku"))
  - (init-game *game*)
+
+================================================
+==    Générer le fichier core (executable)    ==
+================================================
+Dans SBCL du terminal
+(asdf:load-system "sudoku")
+(sb-ext::save-lisp-and-die "sudoku.core" :toplevel #'sudoku::main)
+
+Lancement depuis le ter
+sbcl --noinform --load start.fasl 
+

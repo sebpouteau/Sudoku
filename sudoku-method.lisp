@@ -183,7 +183,6 @@
 		 :initial-grid (list-to-2d-array
 				(read (open grid)))))
 
-
 			   
 (defmethod init-game (game)
   (setf (to-fill (game-squares game)) (* *size* *size*))
@@ -198,11 +197,16 @@
   	      (setf (protected (aref (squares-array (game-squares game)) x y)) T ))))
   (update-possibility-all-square (game-squares game)))
 
+
 (defmethod change-digit ((squares game) x y value)
   (change-digit (game-squares squares) x y value))
 
+(defmethod game-do (game square)
+  (change-digit game (x-coor (coor square)) (y-coor (coor  square)) (digit square)))
+
 (defmethod get-possibility ((square game) x y)
   (possible-digits (aref (squares-array (game-squares square)) x y)))
+
 (defmethod get-possibility ((square squares) x y)
   (possible-digits (aref (squares-array square) x y)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -228,3 +232,19 @@
 		   (return-from fin 'win))
 	    ))))))
   
+(defun main()
+  (handler-case
+      (let (( game (make-game "Grids/1.sudoku")))
+	(init-game game)
+	(sudoku game))
+    (T (c)
+      (format T "~%~a~%" c)
+      (sb-ext:exit))))
+
+(defun game-with-new-grid()
+  (let (( game (make-game "Grids/1.sudoku")))
+    (init-game game)
+    game))
+
+(defun init-sudoku ()
+  )

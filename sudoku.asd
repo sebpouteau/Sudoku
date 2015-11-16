@@ -5,8 +5,8 @@
 
 (in-package :sudoku-system)
 
-(defparameter *sudoku-directory* (directory-namestring *load-truename*))
-(format t "sudoku-directory is ~A ~%" *sudoku-directory*)
+;;(defparameter *sudoku-directory* (directory-namestring *load-truename*))
+;;(format t "sudoku-directory is ~A ~%" *sudoku-directory*)
 
 (asdf:defsystem :sudoku
   :serial t
@@ -17,4 +17,5 @@
    (:file "sudoku-method")
    (:file "sudoku-affichage")
    (:file "sudoku-strategy")
+   (:file "coor")
    ))

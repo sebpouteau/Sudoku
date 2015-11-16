@@ -61,6 +61,8 @@
 (defgeneric copy-square(square)
   (:documentation "copie un square et retourne la copie"))
 
+(defmethod coor-square ( squares coor)
+  (aref (squares-array squares) (x-coor coor) (y-coor coor)))
 
 ;; ====================
 ;; ==     Grille     ==

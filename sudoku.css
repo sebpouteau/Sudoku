@@ -1,0 +1,115 @@
+body {
+    background-color: Lavender;
+}
+
+.square {
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    font-size:18px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.square form input {
+    width: 25px;
+    line-height: 25px;
+    background: LightBlue;
+    text-align: center;
+    padding: 0;
+    border: 0;
+}
+
+.square .digit {
+    line-height: 25px;
+    width: 25px;
+    background: HotPink;
+    color: LightSeaGreen;
+}
+
+.square .digit .protected {
+    color: DarkBlue;
+}
+
+.square nav ul {
+    margin: 0;
+    padding: 0;
+}
+
+.square nav ul li {
+    background: LightPink;
+    width: 25px;
+    line-height: 25px;  /* current font size x 1.5 */
+    border: 0;
+}
+
+.square nav ul li a {
+    width: 25px;
+    height: 25px;
+    color: DarkOrchid;
+    text-decoration:none;
+}
+
+.square nav ul li:hover ul li {
+    background: LightBlue;
+    border-bottom:1px DarkBlue solid;
+}
+
+.square nav ul li:hover ul li a:hover{
+    background: Green;
+    padding: 0;
+}
+
+.square nav ul li:hover ul { /* Affiche le menu deroulant */
+    display:list-item !important;
+    position:absolute;
+    margin-top: -25px;
+    line-height: 25px;
+    list-style:none !important;
+}
+ 
+
+.tdd {
+    margin: 0;
+}
+
+.zone {
+    border: DarkBlue solid 1px;
+}
+
+.squares {
+    border-collapse: collapse; 
+}
+
+/* nav classique */
+nav {
+    width: 400px;
+    background: grey;
+}
+
+nav ul li {
+    list-style: none;
+    float:left;
+}
+
+nav ul li a {
+    color: DarkSalmon;
+    padding:10px;
+    text-decoration:none;
+}
+ 
+nav ul li ul { /* Rend le menu déroulant caché par défaut */
+    display: none;
+} 
+ 
+nav ul li:hover ul { /* Affiche le menu deroulant au survol de la souris */
+    display:list-item !important;
+    position:absolute;
+    list-style:none !important;
+}
+ 
+nav ul li:hover ul li {
+    background: PaleGreen;
+    float:none;
+}
