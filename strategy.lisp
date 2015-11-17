@@ -377,9 +377,9 @@
     ;; on essaye toute les fonctions pour trouver un coup à jouer
     (loop for fun in '(one-possibility
 		       depth-study-possibility) do
-	 (multiple-value-bind (x y value)  (parcour-grid-with-function game fun)
-	   (when x
-	     (return-from fin (values x y value)))))))
+			 (multiple-value-bind (x y value)  (parcour-grid-with-function game fun)
+			   (when x
+			     (return-from fin (values x y value)))))))
 
 (defun strategy1 (game)
   ;;(update-possibility-all-square (game-squares game))
@@ -501,7 +501,7 @@ sens permet de choisir entre line et colonne (line / column)"
 
 (defun play-verification-game-over (game)
   "joue jusqu'a perdre ou gagner pour verifier si x y value de l'étude en profondeur va resoudre la grille" 
-    (loop while (not (eq (strategy game) NIL)) do
+    (loop while (not (eq (strategy1 game) NIL)) do
       (multiple-value-bind (x y value) (strategy1 game)
 	
 	  (change-digit game x y value)
@@ -514,7 +514,7 @@ sens permet de choisir entre line et colonne (line / column)"
   
 (defun depht-hypothesis(game x y value)
   "verifie si x y value resout la grille"
-(print "j' fait une hypothèse")
+  (print "j' fait une hypothèse")
   (let ((oldSquares (copy-squares (game-squares game)))
 	(bool NIL))
     (change-digit game x y value)
@@ -533,7 +533,7 @@ sens permet de choisir entre line et colonne (line / column)"
   (loop while (and (not (eq (strategy game) NIL))
 		   (not (game-over game)))
 	do
-	  (main-standalone)
+	   (main-standalone)
 	)
   (game-over game)
   )

@@ -188,3 +188,14 @@
 
 (defgeneric ask-digit ()
   (:documentation "Demande la valeur de la case à l'utilisateur"))
+
+
+;; =======================
+;; ==     Stratégie     ==
+;; =======================
+
+(defgeneric init-standalone (tab)
+  (:documentation " créer tout la structure pour exécuter la stratégie, il prend un tableau 2D en parametre"))
+
+(defgeneric main-standalone ()
+  (:documentation "renvoie un coup à jouer [x,y] value"))
