@@ -40,10 +40,12 @@ Compiler le Projet et créer une grille remplie :
 ================================================
 ==    Générer le fichier core (executable)    ==
 ================================================
+
 Dans SBCL du terminal
 (asdf:load-system "sudoku")
 (sb-ext::save-lisp-and-die "sudoku.core" :toplevel #'sudoku::main)
+sbcl --core sudoku.core
 
-Lancement depuis le ter
+Lancement depuis le terminal
 sbcl --noinform --load start.fasl 
 

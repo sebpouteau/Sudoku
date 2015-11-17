@@ -16,6 +16,7 @@
 
 
 (defmethod main ()
+  (terpri)
   (princ "Saisir la grille de jeu (Exemple : Grids/1.sudoku) : ")
   (force-output)
   (handler-case
@@ -32,7 +33,7 @@
 (defmethod sudoku (game)
   (loop while (not (game-over game)) do
        (launcher-sudoku game))
-  (print-grid *game*)
+  (print-grid game)
   (print-end (game-over game))
   )
 
@@ -50,7 +51,8 @@
 	 (y (- *column* 65)))
     (if (protected (aref (squares-array squares) x y))
 	(progn
-	  (print "Impossible de changer cette case : valeur initial")
+	  (princ "Impossible de changer cette case : valeur initial")
+	  (terpri)
 	  (terpri))
 	(change-digit squares x y *value-digit*)))
   )
@@ -118,7 +120,12 @@
   )
 
 
-(defmethod print-line (squares)
+(defmethod print-line ((game game))
+  (print-line (game-squares game))
+  )
+
+
+(defmethod print-line ((squares squares))
   (loop for x from 0 to (1- *size*) do
        (if (< 9 *size*) 
 	   (format T "| ~2d |" (1+ x))

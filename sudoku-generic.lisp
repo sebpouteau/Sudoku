@@ -162,6 +162,9 @@
 (defgeneric print-column ()
   (:documentation "Affiche les lettres des colonnes"))
 
+(defgeneric print-line (game)
+  (:documentation "Affiche les chiffres des lignes, ainsi que la grille du jeu passé en paramètre"))
+
 (defgeneric print-line (squares)
   (:documentation "Affiche les chiffres des lignes, ainsi que la grille"))
 
