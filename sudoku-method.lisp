@@ -1,24 +1,24 @@
+
 ;;===========================================
 ;;==           Implémentation              ==
 ;;==          FONCTIONS SUDOKU             ==
 ;;===========================================
 
-
 (in-package :sudoku)
 
 
-;; ========================
-;; ==     Coordonnées    ==
-;; ========================
+;; ---------------------
+;; --   Coordonnées   --
+;; ---------------------
 
 (defmethod make-coor (x y)
   (make-instance 'coor :x x :y y)
   )
 
 
-;; ===================
-;; ==     Carré     ==
-;; ===================
+;; ---------------------
+;; --      Carré      --
+;; ---------------------
 
 (defmethod make-square (coor &optional digit)
   (make-instance 'square :coor coor :digit digit)
@@ -43,9 +43,9 @@
   )
 
 
-;; =====================
-;; ==     Grille      ==
-;; =====================
+;; ----------------------
+;; --      Grille      --
+;; ----------------------
 
 (defmethod make-squares()
   (let (( squares (make-instance 'squares)))

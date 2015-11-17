@@ -1,19 +1,25 @@
 
-;;===========================================
-;;==           Implémentation              ==
-;;==             AFFICHAGE                 ==
-;;===========================================
+;;========================================
+;;==           Implémentation           ==
+;;==         FONCTIONS AFFICHAGE        ==
+;;========================================
 
 
 (in-package :sudoku)
 
 
-;; Définition des variables locales
+;; ---------------------
+;; --     Données     --
+;; ---------------------
+
 (defvar *line*)
 (defvar *column*)
 (defvar *value-digit*)
 (defvar *code-ascii* 65)
 
+;; -------------------------------
+;; --   Méthodes de lancement   --
+;; -------------------------------
 
 (defmethod main ()
   (terpri)
@@ -57,6 +63,10 @@
 	(change-digit squares x y *value-digit*)))
   )
 
+
+;; ------------------------------
+;; --   Méthodes d'affichage   --
+;; ------------------------------
 
 (defmethod print-grid ((game game))
   (print-grid (game-squares game))
@@ -167,10 +177,10 @@
 
 "))
 
- 
+
 (defmethod print-win ()
   (princ 
-"                         ═
+   "                         ═
  ╗  ╔ ╔══╗ ╗  ╔     ╗  ╔ ╔ ╔╗  ╗   ║
  ╚══╣ ║  ║ ║  ║     ║╔╗║ ║ ║ ╚ ║   ║
   ══╝ ╚══╝ ╚══╝     ╚╝╚╝ ╚ ╚  ╚╝   ═
@@ -184,6 +194,10 @@
       (print-game-over))
   )
 
+
+;; ---------------------------------------------------
+;; --   Méthodes d'intéraction avec l'utilisateur   --
+;; ---------------------------------------------------
 
 (defmethod ask-case ()
   ;; Demande la colonne

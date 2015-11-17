@@ -1,6 +1,12 @@
- =========================================
- ==    Guide d'utilisation du Sudoku    ==
- =========================================
+ ==========================================
+ ==    Guide d'installation du Sudoku    ==
+ ==========================================
+
+Auteur :
+ . Yordan Kirov
+ . Jimmy Gouraud 
+ . Sébastien Pouteau
+
 
 Pré-requis :
  . Avoir installer le logiciel Emacs
@@ -39,8 +45,10 @@ Dans le Terminal :
 
   == Version 2 ==
  . Tapez sbcl
- . Dans le SBCL du terminal, tapez :
+ . Dans le SBCL du terminal, pour générer le fichier sudoku.core tapez :
        (asdf:load-system "sudoku")
        (sb-ext::save-lisp-and-die "sudoku.core" :toplevel #'sudoku::main)
+ . Dans le terminal, tapez pour lancer le jeu :
+       sbcl --core sudoku.core
 
 

@@ -1,16 +1,18 @@
 
-;;============================================
-;;==             Interface                  ==
-;;==  contenant toutes les méthodes utiles  ==
-;;============================================
+;;=============================================
+;;==             Interface                   ==
+;;==     FONCTIONS SUDOKU, AFFICHAGE, IA     ==
+;;=============================================
 
 (in-package :sudoku)
-		
-;; =====================
-;; ==     Données     ==
-;; =====================
+
+
+;; ---------------------
+;; --     Données     --
+;; ---------------------
 
 (defun create-list-possibility (size list)
+  "créer la liste des possibilités"
   (if (= size 0)
       list
       (create-list-possibility (1- size) (cons size list))))
@@ -22,9 +24,9 @@
 (defvar *digits* (create-list-possibility *size* '()))
 
 
-;; =========================
-;; ==     Coordonnées     ==
-;; =========================
+;; ---------------------
+;; --   Coordonnées   --
+;; ---------------------
 
 (defclass coor ()
   ((x :initarg :x :reader x-coor :type integer)
@@ -35,9 +37,9 @@
   (:documentation "Instance of a coor [x,y]"))
 
 
-;; ===================
-;; ==     Carre     ==
-;; ===================
+;; ---------------------
+;; --      Carré      --
+;; ---------------------
 
 (defclass square ()
   ((coor :initarg :coor :accessor coor) 
@@ -64,9 +66,9 @@
   (:documentation "Retourne le square aux coordonnées coor"))
 
 
-;; ====================
-;; ==     Grille     ==
-;; ====================
+;; ----------------------
+;; --      Grille      --
+;; ----------------------
 
 (defclass squares ()
   ((squares-array :initarg :squares-array :reader squares-array :type array
@@ -109,9 +111,9 @@
   (:documentation "Met à jour les possible-digits de tous les carrés de la grille passée en paramètre"))
 
 
-;; ==================
-;; ==     Game     ==
-;; ==================
+;; ----------------------
+;; --       Game       --
+;; ----------------------
 
 (defclass game ()
   ((game-squares :accessor game-squares :initarg :game-squares)
@@ -137,9 +139,9 @@
   (:documentation "Retourne la liste des possibilitées du carré (x,y)"))
 
 
-;; =======================
-;; ==     Affichage     ==
-;; =======================
+;; ---------------------
+;; --    Affichage    --
+;; ---------------------
 
 (defgeneric main ()
   (:documentation "Jeu du sudoku complet (demande la grille, et lance le jeu)"))
@@ -193,12 +195,12 @@
   (:documentation "Demande la valeur de la case à l'utilisateur"))
 
 
-;; =======================
-;; ==     Stratégie     ==
-;; =======================
+;; ---------------------
+;; --    Stratégie    --
+;; ---------------------
 
 (defgeneric init-standalone (tab)
-  (:documentation " créer tout la structure pour exécuter la stratégie, il prend un tableau 2D en parametre"))
+  (:documentation "Créer toute la structure pour exécuter la stratégie. Il prend un tableau 2D en paramètre"))
 
 (defgeneric main-standalone ()
-  (:documentation "renvoie un coup à jouer [x,y] value"))
+  (:documentation "Renvoie un coup à jouer [x,y] value"))

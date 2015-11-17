@@ -1,9 +1,11 @@
-;;============================
-;;==     Implementation     ==
-;;==    Strategy Aleatoire  ==
-;;============================
+
+;;========================================
+;;==           Implémentation           ==
+;;==      IA - STRATEGIE ALEATOIRE      ==
+;;========================================
 
 (in-package :sudoku)
+
 
 (defun random-from-list(l n)
   (nth (random n) l))
