@@ -68,14 +68,16 @@
 
 
 (defmethod change-digit ((squares squares) x y value)
-  (setf (digit (aref (squares-array squares) x y)) value)
   (if (= (digit (aref (squares-array squares) x y)) 0)
       (progn
+	(setf (digit (aref (squares-array squares) x y)) value)
 	(update-possibility-line squares y 'line)
 	(update-possibility-line squares x 'column)
 	(update-possibility-subsquares squares x y)
 	(setf (to-fill squares) (1- (to-fill squares))))
-      (update-possibility-all-square squares))
+      (progn
+	(setf (digit (aref (squares-array squares) x y)) value)
+	(update-possibility-all-square squares)))
   )
 
 
