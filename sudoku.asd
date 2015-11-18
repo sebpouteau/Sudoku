@@ -12,12 +12,13 @@
   :serial t
   :components
   (
-   (:file "package")
-   (:file "sudoku-static-method")
-   (:file "sudoku-generic")
-   (:file "sudoku-method")
-   (:file "sudoku-affichage")
-   (:file "strategy-smart")
-   (:file "sudoku-strategy")
-   (:file "coor")
+   (:file "sudoku/package")
+   (:file "sudoku/sudoku-static-method")
+   (:file "sudoku/sudoku-generic")
+   (:file "sudoku/sudoku-method")
+   (:file "sudoku/sudoku-affichage")
+   (:file "strategy/strategy-smart")
+   (:file "sudoku/sudoku-strategy")
+   (:file "sudoku-prof/coor")
    ))
+

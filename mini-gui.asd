@@ -4,6 +4,6 @@
   :depends-on (:hunchentoot :sudoku :cl-who)
   :serial t
   :components
-  ((:file "package-gui")
-   (:file "mini-gui")
+  ((:file "sudoku-prof/package-gui")
+   (:file "sudoku-prof/mini-gui")
    ))
