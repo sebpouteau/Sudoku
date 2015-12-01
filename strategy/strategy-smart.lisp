@@ -154,10 +154,3 @@ L'optional sens permet de choisir entre line et colonne (line / column)"
   (game-over game)
   )
 
-
-(defun update-after-change-digit(game x y)
-  "Update les possibilités de la ligne, colonne, sous-carré en [x,y]"
-  (update-possibility-subsquares (game-squares game) x y)
-  (update-possibility-line (game-squares game) x 'line)
-  (update-possibility-line (game-squares game) y 'column)
-  )

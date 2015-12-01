@@ -71,9 +71,6 @@
   (if (= (digit (aref (squares-array squares) x y)) 0)
       (progn
 	(setf (digit (aref (squares-array squares) x y)) value)
-	(update-possibility-line squares y 'line)
-	(update-possibility-line squares x 'column)
-	(update-possibility-subsquares squares x y)
 	(setf (to-fill squares) (1- (to-fill squares))))
       (progn
 	(setf (digit (aref (squares-array squares) x y)) value)
@@ -101,10 +98,7 @@
   )
 
 (defmethod remove-sublist(list1 list2)
-  (if (endp list1)
-      list2
-      (remove-sublist (cdr list1) (remove (car list1) list2)))
-  )
+  (set-difference list2 list1))
 
 
 (defmethod update-possibility-line (squares indiceStatic sens)
@@ -162,6 +156,12 @@
   )
 
 
+(defmethod update-after-change-digit(game x y)
+  (update-possibility-subsquares (game-squares game) x y)
+  (update-possibility-line (game-squares game) x 'line)
+  (update-possibility-line (game-squares game) y 'column)
+  )
+
 (defmethod make-game (grid)
   (let ((game (make-instance 'game
 			     :game-squares (make-squares)
@@ -197,16 +197,18 @@
 		(x-coor (coor square)) 
 		(y-coor (coor  square)) 
 		(digit square))
-  )
-
-
-(defmethod get-possibility ((square game) x y)
-  (get-possibility (game-squares square) x y)
+  (update-after-change-digit game
+			     (x-coor (coor square)) 
+			     (y-coor (coor  square)))
   )
 
 
 (defmethod get-possibility ((square squares) x y)
   (possible-digits (aref (squares-array square) x y))
+  )
+
+(defmethod get-possibility ((square game) x y)
+  (get-possibility (game-squares square) x y)
   )
 
 

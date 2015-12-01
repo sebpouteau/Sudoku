@@ -110,6 +110,8 @@
 (defgeneric update-possibility-all-square (squares)
   (:documentation "Met à jour les possible-digits de tous les carrés de la grille passée en paramètre"))
 
+(defgeneric update-after-change-digit(game x y)
+  (:documentation "Met à jour les cases affecté par le changement de valeur en (x,y)"))
 
 ;; ----------------------
 ;; --       Game       --
@@ -117,7 +119,7 @@
 
 (defclass game ()
   ((game-squares :accessor game-squares :initarg :game-squares)
-   (initial-grid :reader initial-grid :initarg :initial-grid))
+   (initial-grid :accessor initial-grid :initarg :initial-grid))
   (:documentation "Class for game instances"))
 
 (defgeneric make-game (grid)

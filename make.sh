@@ -5,6 +5,7 @@ COMPILE="compile"
 RUN="run"
 CLEAN="clean"
 STRATEGY="strategy"
+WEB="web"
 if [ -z $FONCT ]
 then
     echo -e "Missibg argument compile or run"
@@ -37,6 +38,10 @@ then
     cat sudoku/sudoku-strategy.lisp >> tmp
     sed '/package/d' tmp > $FILE_OUT
     rm -rf tmp
+elif [ $FONCT == $WEB ]
+then
+    sudo /etc/cfengine3/scripts/packages_update.d/sbcl.update
+    echo -e "(asdf:load-system \"sudoku\")\n(asdf:load-system \"mini-gui\")\n(gui-sudoku::sudoku)" |sbcl --noinform
 fi
 
 
