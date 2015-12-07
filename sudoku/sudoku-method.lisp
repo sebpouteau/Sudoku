@@ -224,7 +224,7 @@
 		    ))))
   )
 
-
+;; cette fonction ne sert que pour l'interface web
 (defmethod game-with-new-grid(&optional strategy)
   (declare (ignore strategy))
   (let ((game (make-game "Grids/1.sudoku")))

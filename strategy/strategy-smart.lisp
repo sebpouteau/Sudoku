@@ -19,7 +19,7 @@
   )
 
 (defun substrategy (game list)
-  "lance la stratégie avec les fonctions de la liste"
+  "lance la stratégie avec les fonctions contenu dans la liste"
   (loop for fun in list do
        (multiple-value-bind (x y value)  (parcour-grid-with-function game fun)
 	 (when x
@@ -39,6 +39,7 @@
        (loop for x from 0 to (1- *size*) do
 	    (when (verification-square-valid game x y)
 	      (multiple-value-bind (x y value) (funcall fun game x y)
+		;; si x est non nul, c'est qu'il y a une solution
 		(when x
 		  (return-from parcour-grid-with-function (values x y value)))))))
   )
@@ -52,7 +53,7 @@
 
 
 (defun one-possibility-in-subsquare (game x y)
-  "Retourne x y value, s'il y a une possibilité unique dans un sous-square.
+  "Retourne x y value, s'il y a une possibilité unique dans un sous-square .
 Par exemple si une value n'apparait que dans les possibilités d'un seul square du sous squares"
   (let ((list (verifier-subsquare game x y )))
     (when (= (length list) 1)

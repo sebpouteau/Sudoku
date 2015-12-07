@@ -11,9 +11,7 @@
   (setf *game* (make-instance 'game
 			      :game-squares (make-squares)
 			      :initial-grid tab))
-  ;(setf (initial-grid *game*) tab)
   (init-game *game*)
-  (update-possibility-all-square (game-squares *game*))
   )
 
 

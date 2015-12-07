@@ -22,33 +22,26 @@ Pré-requis :
 - Lancement du sudoku -
 -----------------------
 
-Dans Slime :
- . Ouvrez emacs
- . Faites  M-x slime  ou  Alt-x slime 
- . Dans le *slime-repl sbcl* qui apparait, tapez :
-       (asdf:load-system "sudoku")
-     - Faites Ctr-c Alt-p SUDOKU
-     - En enfin, lancer le jeu avec :
-       (main)
+Mode console:
 
+A la racine du projet effectuer:
+   - ./make.sh compile  : ceci compilera le projet
+   - ./make.sh run      : le sudoku ce lancera directement dans le terminal,
+                          il demandera un chemin de grille.
 
-Dans le Terminal :
-  == Version 1 ==
- . Ouvrez emacs
- . Faites  M-x slime  ou  Alt-x slime 
- . Dans le *slime-repl sbcl* qui apparait, tapez :
-       (compile-file "start.lisp")  -> cela génère le fichier start.fasl
- . Retournez sur le terminal, et tapez :
-       sbcl --noinform --load start.fasl
- . Aprés avoir joué, tapez dans le SBCL du terminal :
-       (SB-EXT:EXIT)
+mode Web:
 
-  == Version 2 ==
- . Tapez sbcl
- . Dans le SBCL du terminal, pour générer le fichier sudoku.core tapez :
-       (asdf:load-system "sudoku")
-       (sb-ext::save-lisp-and-die "sudoku.core" :toplevel #'sudoku::main)
- . Dans le terminal, tapez pour lancer le jeu :
-       sbcl --core sudoku.core
+A la racine du projet effectuer:
+   - ./make.sh compile  : ceci compilera le projet
+   - ./make.sh web      : il lancera le sudoku, et donnera une adresse, 
+                          il suffira de la rentrer dans un navigateur.
+           
+----------------------------------------
+- Création fichier Startegy  du sudoku -
+----------------------------------------
 
-
+effectuer:
+   ./make.sh strategy name-strategy  name-file-strategy-out
+        (name-strategy = strategy-smart.lisp / strategy-random.lisp)
+        (name-file-strategy-out = toto.lisp par exemple, 
+                                  toto.lisp contiendra tout les fichiers concaténé en un seul)
