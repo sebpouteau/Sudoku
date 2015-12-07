@@ -7,6 +7,7 @@ CLEAN="clean"
 STRATEGY="strategy"
 WEB="web"
 HELP="help"
+
 if [ -z $FONCT ]
 then
     echo -e "Missibg argument compile, run, make strategy, web, help"
@@ -14,18 +15,28 @@ then
 elif [ $FONCT == $COMPILE ]
 then
     echo -e "(asdf:load-system \"sudoku\")\n(sb-ext::save-lisp-and-die \"sudoku.core\" :toplevel #'sudoku::main)" |sbcl --noinform --noprint
-   mv sudoku.core bin/
+    if [ ! -d "./bin" ];then
+	mkdir bin
+    fi
+    mv sudoku.core bin/
 
 elif [ $FONCT == $RUN ]
 then
-    sbcl --noinform --core bin/sudoku.core
+    if [ ! -d "./bin" ];then
+	 echo -e "Vous devez d'abord compiler avant de run. Faire : 
+     ./make.sh compile"
+    else
+	sbcl --noinform --core bin/sudoku.core
+    fi
+
 elif [ $FONCT == $CLEAN ]
 then
     rm -rf sudoku/*~ sudoku/*.fasl
     rm -rf sudoku-prof/*~ sudoku-prof/*.fasl
     rm -rf strategy/*~ strategy/*.fasl
     rm -rf *~ *.fasl
-    rm -rf bin/*
+    rm -rf bin
+
 elif [ $FONCT == $STRATEGY ]
 then
     FILE_OUT=$3
@@ -39,26 +50,39 @@ then
     cat sudoku/sudoku-strategy.lisp >> tmp
     sed '/package/d' tmp > $FILE_OUT
     rm -rf tmp
+
 elif [ $FONCT == $WEB ]
 then
     sudo /etc/cfengine3/scripts/packages_update.d/sbcl.update
     echo -e "(asdf:load-system \"sudoku\")\n(asdf:load-system \"mini-gui\")\n(gui-sudoku::sudoku)" |sbcl --noinform
+
 elif [ $FONCT == $HELP ]
 then
-    echo -e " ===========================
-             HELP
- ===========================\n"
-    echo -e "Arguements possibles: \n
+    echo -e "
+   ====================
+   ====    HELP    ====
+   ====================
+
+Arguments possibles: 
+
   - compile
-       Compile le programme et créer l'executable placer dans bin/ \n
+       Compile le programme et créer l'éxécutable placé dans bin/ 
+
   - run
-       Lance le sudoku dans le terminal\n
+       Lance le sudoku dans le terminal
+
   - web
-       Lance le sudoku sur une page web\n
-  - stretegy name-startegy-input  name-staretgy-output
-       Créer un fichier strategy\n
+       Lance le sudoku sur une page web
+
+  - strategy name-strategy name-strategy-output
+        avec : 
+	   - name-strategy = strategy-smart.lisp / strategy-random.lisp
+           - name-strategy-output = toto.lisp par exemple. 
+                toto.lisp contiendra tous les fichiers concaténés en un seul
+
   - clean 
-       Nettoye l'archive\n"
+       Nettoie l'archive
+"
 fi
 
 

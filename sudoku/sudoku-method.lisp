@@ -98,7 +98,8 @@
   )
 
 (defmethod remove-sublist(list1 list2)
-  (set-difference list2 list1))
+  (set-difference list2 list1)
+  )
 
 
 (defmethod update-possibility-line (squares indiceStatic sens)
@@ -117,7 +118,7 @@
 	   (update-possibility squares (car coor) (cadr coor) list))))
   )
 
- 
+
 (defmethod update-possibility-subsquares (squares x y)
   (let ((list '())
 	(array (squares-array squares))
@@ -220,14 +221,13 @@
 			  (eq (possible-digits square) NIL))
 		     (return-from game-over 'lose))
 		    ((= (to-fill (game-squares game)) 0)
-		     (return-from game-over 'win))
-		    ))))
+		     (return-from game-over 'win))))))
   )
 
-;; cette fonction ne sert que pour l'interface web
+;; Cette fonction ne sert que pour l'interface web
 (defmethod game-with-new-grid(&optional strategy)
   (declare (ignore strategy))
-  (let ((game (make-game "Grids/1.sudoku")))
+  (let ((game (make-game "grids/9x9/1.sudoku")))
     (init-game game)
     game)
   )

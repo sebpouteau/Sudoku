@@ -4,8 +4,8 @@
 ;;==            FONCTIONS IA               ==
 ;;===========================================
 
-
 (in-package :sudoku)
+
 
 (defmethod init-standalone (tab)
   (setf *game* (make-instance 'game

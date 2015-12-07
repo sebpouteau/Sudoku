@@ -10,12 +10,11 @@ Auteur :
 
 Pré-requis :
  . Avoir installer le logiciel Emacs
- . Savoir ouvrir un fichier avec Emacs
  . Avoir installer SBCL
  . Dans votre répertoire courant, modifiez ou créez le fichier .sbclrc, en ajoutant dedans :
        (require "asdf")
        (push #P"/home/jimgouraud/sudoku/" asdf:*central-registry*)
-          -> remplacez "/home/jimgouraud/sudoku" par votre répertoire contenant le sudoku
+          /!\ Remplacez "/home/jimgouraud/sudoku" par votre répertoire contenant le sudoku
 
 
 -----------------------
@@ -24,24 +23,29 @@ Pré-requis :
 
 Mode console:
 
-A la racine du projet effectuer:
-   - ./make.sh compile  : ceci compilera le projet
-   - ./make.sh run      : le sudoku ce lancera directement dans le terminal,
+A la racine du projet, effectuez:
+   - ./make.sh compile  -> ceci compilera le projet
+   - ./make.sh run      -> le sudoku se lancera directement dans le terminal,
                           il demandera un chemin de grille.
 
-mode Web:
+Mode interface Web:
 
-A la racine du projet effectuer:
-   - ./make.sh compile  : ceci compilera le projet
-   - ./make.sh web      : il lancera le sudoku, et donnera une adresse, 
-                          il suffira de la rentrer dans un navigateur.
-           
-----------------------------------------
-- Création fichier Startegy  du sudoku -
-----------------------------------------
+A la racine du projet, effectuez:
+   - ./make.sh compile  -> ceci compilera le projet
+   - ./make.sh web      -> il lancera le sudoku, et donnera une adresse, 
+                          il suffira de rentrer l'adresse dans un navigateur.
 
-effectuer:
-   ./make.sh strategy name-strategy  name-file-strategy-out
-        (name-strategy = strategy-smart.lisp / strategy-random.lisp)
-        (name-file-strategy-out = toto.lisp par exemple, 
-                                  toto.lisp contiendra tout les fichiers concaténé en un seul)
+Pour obtenir de l'aide concernant les différentes options de make.sh, effectuez :
+   - ./make.sh help
+
+
+---------------------------------------
+- Création fichier strategy du sudoku -
+---------------------------------------
+
+effectuez:
+   ./make.sh strategy name-strategy name-strategy-output
+        avec : 
+	   - name-strategy = strategy-smart.lisp / strategy-random.lisp
+           - name-strategy-output = toto.lisp par exemple. 
+               toto.lisp contiendra tous les fichiers concaténés en un seul

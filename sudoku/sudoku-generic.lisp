@@ -1,6 +1,6 @@
 
 ;;=============================================
-;;==             Interface                   ==
+;;==                Interface                ==
 ;;==     FONCTIONS SUDOKU, AFFICHAGE, IA     ==
 ;;=============================================
 
@@ -12,7 +12,7 @@
 ;; ---------------------
 
 (defun create-list-possibility (size list)
-  "créer la liste des possibilités"
+  "Créer la liste des possibilités"
   (if (= size 0)
       list
       (create-list-possibility (1- size) (cons size list))))
@@ -49,9 +49,9 @@
    (protected :initform nil :initarg :protected :accessor protected))
   (:documentation "One square of the squares
          coor -> coordonnée du carré dans la grille
-         possible-digits -> valeurs (nombres) possibles du carré
-         digit -> valeur (nombre) affiché du carré
-         protected -> vaut true si le nombre était au début => non-modifiable"))
+         possible-digits -> valeurs possibles du carré
+         digit -> valeur affichée du carré
+         protected -> vaut true si le nombre était au début => non modifiable"))
 
 (defgeneric make-square (coor &optional digit)
   (:documentation "Creates a square containing coor and digit"))
@@ -101,17 +101,17 @@
   (:documentation "Supprime les éléments de list2 présents dans list1 et renvoie list2"))
 
 (defgeneric update-possibility-line (squares indiceStatic sens)
-  (:documentation "Met à jours les possible-digits de tous les carrés de squares selon le paramètre sens :
+  (:documentation "Met à jour les possible-digits de tous les carrés de squares selon le paramètre sens :
                          sens -> 'line ou 'column permet de parcourir les lignes ou les colonnes"))
 
 (defgeneric update-possibility-subsquares (squares x y)
-  (:documentation "Met à jour les possible-digits des carrés du sous-carrés"))
+  (:documentation "Met à jour les possible-digits des carrés du sous-carré"))
 
 (defgeneric update-possibility-all-square (squares)
   (:documentation "Met à jour les possible-digits de tous les carrés de la grille passée en paramètre"))
 
 (defgeneric update-after-change-digit(game x y)
-  (:documentation "Met à jour les cases affecté par le changement de valeur en (x,y)"))
+  (:documentation "Met à jour les cases affectées par le changement de valeur en (x,y)"))
 
 ;; ----------------------
 ;; --       Game       --
@@ -123,7 +123,7 @@
   (:documentation "Class for game instances"))
 
 (defgeneric make-game (grid)
-  (:documentation "Créer une instance de game avec le lien d'une grille passé en paramètre"))
+  (:documentation "Créer une instance de game avec le lien d'une grille passée en paramètre"))
 
 (defgeneric game-over (game)
   (:documentation "If the game is over (either won or lost"))
@@ -138,7 +138,7 @@
   (:documentation "Plays coor/digit of square in the coor-square in squares of GAME"))
 
 (defgeneric get-possibility (square x y)
-  (:documentation "Retourne la liste des possibilitées du carré (x,y)"))
+  (:documentation "Retourne la liste des possibilités du carré (x,y)"))
 
 
 ;; ---------------------
@@ -167,7 +167,7 @@
   (:documentation "Affiche les lettres des colonnes"))
 
 (defgeneric print-line (game)
-  (:documentation "Affiche les chiffres des lignes, ainsi que la grille du jeu passé en paramètre"))
+  (:documentation "Affiche les chiffres des lignes, ainsi que la grille du jeu passée en paramètre"))
 
 (defgeneric print-line (squares)
   (:documentation "Affiche les chiffres des lignes, ainsi que la grille"))
@@ -177,7 +177,7 @@
 
 (defgeneric print-game-over ()
   (:documentation "Affiche 'Game Over !' "))
- 
+
 (defgeneric print-win ()
   (:documentation "Affiche 'You Win !' "))
 
@@ -202,7 +202,7 @@
 ;; ---------------------
 
 (defgeneric init-standalone (tab)
-  (:documentation "Créer toute la structure pour exécuter la stratégie. Il prend un tableau 2D en paramètre"))
+  (:documentation "Créer toute la structure pour éxécuter la stratégie. Il prend un tableau 2D en paramètre"))
 
 (defgeneric main-standalone ()
   (:documentation "Renvoie un coup à jouer [x,y] value"))

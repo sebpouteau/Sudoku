@@ -4,7 +4,6 @@
 ;;==         FONCTIONS AFFICHAGE        ==
 ;;========================================
 
-
 (in-package :sudoku)
 
 
@@ -17,13 +16,14 @@
 (defvar *value-digit*)
 (defvar *code-ascii* 65)
 
+
 ;; -------------------------------
 ;; --   Méthodes de lancement   --
 ;; -------------------------------
 
 (defmethod main ()
   (terpri)
-  (princ "Saisir la grille de jeu (Exemple : Grids/1.sudoku) : ")
+  (princ "Choose the path of the grid (e.g : grids/9x9/1.sudoku) : ")
   (force-output)
   (handler-case
       (let* ((grille (read-line))
@@ -47,10 +47,10 @@
 (defmethod launcher-sudoku (game)
   ;; Affiche la grille
   (print-grid game)
-
+  
   ;; Demande la ligne, la colonne et la valeur de la case à modifier
   (ask-case)
-
+  
   ;; Change la valeur de la case
   (let* ((squares (game-squares game))
 	 (x (1- *line*))
@@ -76,19 +76,19 @@
 (defmethod print-grid ((squares squares))
   ;; Affiche le titre
   (print-title)
-
+  
   ;; Affiche la barre au dessus des lettres
   (print-bar " " " " "┌" "┬" "┐")
-
+  
   ;; Affiche les lettres des colonnes
   (print-column)
-
+  
   ;; Affiche la barre en-dessous des lettres
   (print-bar "─" "┌" "┼" "┼" "┤")
-
+  
   ;; Affiche les chiffres des lignes, ainsi que la grille
   (print-line squares)
-
+  
   ;; Affiche la barre de fin
   (print-bar "─" "└" "┴" "┴" "┘")
   )
@@ -155,8 +155,7 @@
        (when (and (eq (mod (1+ x) *sqrt-size*) 0)
 		  (not (eq x (1- *size*))))
 	 ;; Affiche les barres séparant les différentes zones
-	 (print-bar "─" "├" "┼" "┼" "┤")
-	 ))
+	 (print-bar "─" "├" "┼" "┼" "┤")))
   )
 
 
@@ -202,17 +201,17 @@
 (defmethod ask-case ()
   ;; Demande la colonne
   (ask-column)
-
+  
   ;; Demande la ligne
   (ask-line)
-
+  
   ;; Demande la valeur de la case
   (ask-digit)
   )
 
 
 (defmethod ask-column ()
-  (princ "Enter the column letter: ")
+  (princ "Enter the column letter : ")
   (force-output) ;; force la sortie (utile pour jouer dans le terminal)
   (setf *column* (read-line))
   (loop while (or (not (eq (length *column*) 1)) 
@@ -229,7 +228,7 @@
 
 (defmethod ask-line ()
   (princ "Enter the line number : ")
-  (force-output) ;; force la sortie (utile pour jouer dans le terminal)
+  (force-output)
   (setf *line* (read-line))
   (loop while (or (eq (length *line*) 0)
 		  (not (numberp (parse-integer (string *line*) :junk-allowed t)))
@@ -245,8 +244,8 @@
 
 
 (defmethod ask-digit ()
-  (princ "Enter the digit: ")
-  (force-output) ;; force la sortie (utile pour jouer dans le terminal)
+  (format T "Enter the digit (~d,~d) : " (code-char *column*) *line*)
+  (force-output)
   (setf *value-digit* (read-line))
   (loop while (or (eq (length *value-digit*) 0)
 		  (not (numberp (parse-integer (string *value-digit*) :junk-allowed t)))
@@ -256,7 +255,6 @@
        (setf *value-digit* (read-line)))
   ;; Transforme la valeur de *value-digit* en valeur numérique (utilisable plus facilement)
   (setf *value-digit* (parse-integer *value-digit*))
-  ;; Affiche le résultat
-  (format T "  value-digit : ~d ~%~%" *value-digit*)
+  (terpri)
   )
 
